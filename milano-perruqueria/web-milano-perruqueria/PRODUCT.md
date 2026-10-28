@@ -35,14 +35,14 @@ Peluquería de barrio con 5,0★ en 282 reseñas de Google. Lo que repiten las r
 ## Capabilities and Constraints
 
 - Dirección: Av. de Martí Pujol, 247, 08912 Badalona. Teléfono 937 04 22 07.
-- Horario público (Google y Fresha coinciden): martes a viernes 10:00–19:00, sábado 9:00–14:00, domingo y lunes cerrado. Otro directorio dice 9:30–19:30; confirmar.
+- Horario del cartel de su puerta: martes a viernes 9:30–19:30, sábado 9:00–14:00 (Google y Fresha dicen 10–19).
 - Acceso para silla de ruedas, se necesita cita, pago con tarjeta y móvil (según directorio).
 - WhatsApp, lista de servicios, precios y fotos: pendientes (datos de ejemplo en un solo archivo).
 - SEO local: schema HairSalon, hreflang es/ca, sitemap.
 
 ## Brand Commitments
 
-Nombre "Milano Perruqueria". Sin logo conocido: identidad nueva.
+Nombre "Milano Perruqueria". Su rótulo real es la marca: MILANO en blanco sobre negro con un trazo rosa sobre la A y PERRUQUERIA en versales romanas espaciadas. Interior con espejos dorados barrocos. El usuario pidió que Patri vea la web y diga "esta es mi peluquería": la identidad sale de su local, no de un mundo inventado.
 
 ## Evidence on Hand
 

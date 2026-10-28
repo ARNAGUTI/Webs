@@ -1,21 +1,25 @@
 # Design · Milano Perruqueria
 
-Mundo: **señalética de andén del metro de Milán** (banda roja continua, nombres en blanco, líneas de color). La visita al salón es un trayecto con paradas.
+Mundo: **su propio salón**. La web arranca en su fachada (el rótulo negro iluminado por cuatro focos, el escaparate con perfiles negros y el zócalo de piedra) y entra al local: paredes blancas, espejos dorados, suelo de roble.
 
 ## Color
-- Fondo piedra gris fría `--stone #e3e6e5` (y `--stone-2 #d4d8d7` para raíles vacíos); paneles de esmalte `--enamel #fbfcfb`; tinta `--ink #17191b`, `--ink-2 #41474b`, `--ink-3 #6a7175`; reglas `--rule #b9bfbe`.
-- Banda roja `--red #d3202f` (canto `--red-deep #a9131f`): nombre de la marca, cabecera y pie, acción principal y progreso del trayecto.
-- Ley de color por línea de servicio, sin otros usos: corte `--l-corte` (rojo), color `--l-color #12814a`, tratamientos `--l-trat #f0b400` (número en tinta, nunca blanco), niños `--l-inf #7d55c7`. El lila de la L2 real solo en la etiqueta "L2".
+- Negro del rótulo `--negro #141414`: cabecera, fachada, carta de servicios, pie.
+- Pared `--pared #f7f6f3` y blanco `--blanco`; tinta `--ink #1b1a19`, `--ink-2 #4b4845`, `--ink-3 #76716b`; reglas `--rule #e3dfd9`, `--rule-2 #cfc9c1`.
+- Rosa del trazo del rótulo: `--rosa-luz #e39cc4` (el trazo, sobre negro), `--rosa #b8457f` (botones y selección, blanco encima con contraste 7:1), `--rosa-hondo #96336a` (hover, errores), `--rosa-velo #f7e9f0` (fondo de selección).
+- Oro de los espejos: `--oro #b08636`, `--oro-luz #d9b66c`. Solo filetes, estrellas, títulos de la carta y marcos de foto.
+- Roble: `--roble-velo #f2eadf`, fondo de la sección de productos.
 
 ## Tipografía
-- Una sola familia: Hanken Grotesk Variable (autoalojada, @fontsource). Titulares 800 con tracking -0.03/-0.045em; nombre "Milano" a 5.2–11.5rem, line-height 0.82. Texto 17px, cifras tabulares.
+- Logo: Montserrat 700 con el trazo rosa en SVG sobre la A (componente `Logo.astro`), "PERRUQUERIA" en Cinzel con tracking 0.62em, como el rótulo real.
+- Titulares: Cinzel 600. Texto e interfaz: Montserrat Variable 450–700. Ambas autoalojadas con @fontsource.
 
 ## Componentes
-- `line-badge`: cuadrado 44px radio 4px con el número de línea.
-- Paradas: aro (pendiente), disco lleno rojo (hecha), banderita negra "Lo dejaste aquí" (trayecto guardado). El estado es una marca, no solo un color.
-- Paneles de esmalte con banda superior (6px estaciones, 10px ficha) y esquinas superiores rectas.
-- Botones rectangulares radio 6px: primario rojo, secundario esmalte con borde tinta. Chips de 46px mínimo.
-- Carteles de foto: esmalte con marco de 8–10px y sombra suave con desplazamiento.
+- Fachada: rótulo + escaparate en rejilla puerta (panel negro con estado abierto/cerrado, lema, botones, horario, valoración) / cristal (foto real del interior con reflejo diagonal) + zócalo.
+- Marco: foto con fondo blanco de 10px, filete dorado exterior y filete dorado claro interior.
+- Botones rectangulares radio 4px: rosa (principal), contorno blanco sobre negro, contorno tinta sobre claro. Chips en píldora.
+- Pasos de la cita: números en círculo; el trazo rosa avanza bajo ellos hasta el primer paso pendiente.
+- Ficha de clienta con cabecera negra y el logo.
+- Carta de servicios sobre negro con títulos dorados y puntos guía hasta el precio.
 
 ## Movimiento
-- Un momento: el nombre se descubre de izquierda a derecha (clip-path) y el cartel sube. El tren del trayecto avanza (ancho de la línea roja) hasta la primera parada pendiente. Todo desactivado con reduced-motion.
+- Un momento: al cargar se enciende la luz del rótulo, las letras se enfocan y el trazo rosa se pinta de abajo arriba; después aparece PERRUQUERIA. Todo desactivado con reduced-motion.

@@ -12,11 +12,15 @@ npm run dev -- --port 4323
 
 Abre http://localhost:4323 (catalán: http://localhost:4323/ca/). Versión final: `npm run build` y `npm run preview`.
 
+## La idea
+
+La web es su propio salón: arranca en su fachada (el rótulo negro con MILANO y el trazo rosa sobre la A, recreado en la web, y su escaparate iluminado) y sigue con sus espejos dorados, sus fotos reales (Patri, el local, sus trabajos y sus productos INSIGHT). Cuando la vea, tiene que reconocer su peluquería.
+
 ## Lo que le vendes a Patri
 
-**Planifica tu visita**: un trayecto de cinco paradas, como una línea de metro.
+**Pide tu cita** en cinco pasos:
 
-1. **Destino**: corte, color, tratamientos o niños, y el servicio con su precio "desde".
+1. **Servicio**: corte, color, tratamientos o niños, y el servicio con su precio "desde".
 2. **Tu pelo**: liso, ondulado o rizado, y si está teñido, con canas, seco o fino.
 3. **Largo**: por dónde lo lleva y por dónde lo quiere (de la nuca a la cintura). La web dice cuántos cm se cortan, avisa si pide un largo mayor del que tiene, y la clienta puede marcar que mandará foto de referencia. Esto ataca directamente la única queja reciente en Google (un corte más corto de lo pedido).
 4. **Día y hora**: solo horas dentro del horario y sin pasarse del cierre según lo que dura el servicio.
@@ -30,23 +34,25 @@ Al enviar se abre WhatsApp con todo escrito:
 > Te mando foto de referencia.
 > Mi móvil: 612345678.
 
-Además: si la clienta lo deja a medias, al volver se encuentra su trayecto guardado con una banderita "Lo dejaste aquí"; botón "Añadir a mi calendario" con aviso 3 h antes; mapa que solo se carga al pulsar (sin cookies de Google antes); preguntas típicas de teléfono respondidas.
+Además: si la clienta lo deja a medias, al volver se encuentra su cita como la dejó; botón "Añadir a mi calendario" con aviso 3 h antes; mapa que solo se carga al pulsar (sin cookies de Google antes); preguntas típicas de teléfono respondidas.
 
 Límite honesto: la web no sabe qué horas tiene ya ocupadas; Patri confirma o propone otra. Si más adelante quiere agenda con huecos reales, se puede conectar Google Calendar como en la web de Johny García Barber.
 
 ## Enséñasela a Patri
 
-1. En el móvil: la banda roja con "Milano", el letrero ABIERTO/CERRADO que cambia solo según la hora y el 5,0★ con 282 reseñas.
-2. Pulsa "Corte y peinado" y haz una cita de prueba hasta que se abra WhatsApp con el mensaje escrito. Mientras `whatsapp` esté vacío en `negocio.ts`, WhatsApp deja elegir a quién mandarlo (te lo puedes mandar a ti).
+1. En el móvil: su rótulo con el trazo rosa pintándose al cargar, su escaparate, el cartel ABIERTO/CERRADO que cambia solo según la hora y el 5,0★ con 282 reseñas.
+2. Pulsa "Pide cita" y haz una cita de prueba hasta que se abra WhatsApp con el mensaje escrito. Mientras `whatsapp` esté vacío en `negocio.ts`, WhatsApp deja elegir a quién mandarlo (te lo puedes mandar a ti).
 3. El argumento: hoy, quien la busca acaba en una ficha automática de Fresha que ella no controla, con "Llamar para reservar" y "Reservar online en establecimientos cercanos" (otros salones). Con su web la cita le llega directa y mejor explicada, sin comisiones.
 
 ## Lo que hay que confirmar con Patri
 
 Todo está en `src/data/negocio.ts`:
 - **WhatsApp** del salón (ahora vacío).
-- **Horario**: el de Google y Fresha (mar–vie 10–19, sáb 9–14). Un directorio dice 9:30–19:30.
+- **Horario**: el del cartel de su puerta (mar–vie 9:30–19:30, sáb 9–14). Google y Fresha dicen 10–19.
 - **Servicios y precios**: los precios son de ejemplo ("desde").
-- **Fotos**: de muestra (Unsplash) en `src/assets/img/`, ver `PROCEDENCIA.txt`. Sustituir por fotos reales con el mismo nombre.
+- **Fotos**: son las de su ficha de Google Maps (fachada, interior, Patri, trabajos, productos), ver `src/assets/img/PROCEDENCIA.txt`. Confirmar que se pueden usar y que la de `patri.jpg` es ella; si quiere otras, se cambian con el mismo nombre.
+- **Productos**: la web dice que trabaja con INSIGHT (se ve en su estantería). Confirmar.
+- **Instagram**: una de sus fotos viene de Instagram; si tiene cuenta, se añade el enlace.
 - **Aviso legal**: titular, NIF y email en `src/components/Legal.astro` (marcados con [ ]).
 - **Dominio**: `astro.config.mjs` (ahora milanoperruqueria.com, provisional).
 - La valoración (5,0, 282 reseñas) es de Google Maps a 28/10/2026.

@@ -3,6 +3,7 @@
 // PENDIENTE: titular, NIF y email del negocio (marcados con [ ]).
 import { ui, type Lang } from '../i18n/ui';
 import { negocio } from '../data/negocio';
+import Logo from './Logo.astro';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -11,11 +12,8 @@ const home = lang === 'es' ? '/' : '/ca/';
 const dir = `${negocio.direccion.calle}, ${negocio.direccion.cp} ${negocio.direccion.ciudad} (${negocio.direccion.provincia})`;
 ---
 <header class="top is-solid legal-top">
-  <a class="brand" href={home} aria-label={negocio.nombre}>
-    <span class="badge" aria-hidden="true">M</span>
-    <span class="brand-name">Milano</span>
-  </a>
-  <a class="btn btn-ghost btn-sm" href={home}>{t.legal.volver}</a>
+  <a class="top-logo" href={home} aria-label={negocio.nombre}><Logo sub={false} /></a>
+  <a class="btn btn-line btn-sm" href={home}>{t.legal.volver}</a>
 </header>
 <main class="legal wrap" id="contenido">
   <h1 class="h2">{t.legal.titulo}</h1>

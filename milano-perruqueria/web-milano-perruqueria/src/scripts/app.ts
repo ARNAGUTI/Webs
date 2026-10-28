@@ -10,7 +10,7 @@ interface Cliente {
   negocio: { nombre: string; direccion: string };
   t: {
     dias: string[]; diasCortos: string[]; meses: string[]; hoy: string; manana: string;
-    ruta: Ruta; hero: { abierto: string; cerrado: string }; desde: string; gratis: string; linea: string;
+    ruta: Ruta; hero: { abierto: string; cerrado: string }; desde: string; gratis: string;
     visita: { abierto: string; cierraA: string; ahoraCerrado: string; abreHoy: string; abreManana: string; abreEl: string; aLas: string };
   };
 }
@@ -58,8 +58,8 @@ export function init() {
   // ---------- Cabecera y barra móvil ----------
   const top = $('[data-top]')!;
   const dock = $('.dock');
-  const hero = $('.hero')!;
-  const ruta = $('#ruta')!;
+  const hero = $('.fachada')!;
+  const ruta = $('#cita')!;
   let rutaVisible = false;
   const onScroll = () => {
     top.classList.toggle('is-solid', window.scrollY > 24);
@@ -243,13 +243,12 @@ function initRuta(c: Cliente, now: ReturnType<typeof nowMadrid>, tramosDe: (d: D
     });
     // La línea roja avanza hasta la primera parada pendiente, como un tren.
     const hasta = keys.findIndex((k) => !done[k]);
-    map.style.setProperty('--progress', String((hasta < 0 ? keys.length - 1 : Math.max(0, hasta - 1)) / (keys.length - 1)));
+    map.parentElement!.style.setProperty('--progress', String((hasta < 0 ? keys.length - 1 : Math.max(0, hasta - 1)) / (keys.length - 1)));
     const s = servicioSel();
     const l = c.lineas.find((x) => x.id === (s?.linea ?? lineaSel()));
     const ficha = $('[data-ficha]')!;
-    ficha.style.setProperty('--lc', l ? `var(--l-${l.id === 'tratamiento' ? 'trat' : l.id === 'infantil' ? 'inf' : l.id})` : 'var(--ink-3)');
-    $('[data-ficha-badge]', ficha)!.textContent = l ? String(l.num) : '–';
-    $('[data-ficha-svc]', ficha)!.textContent = s ? s.nombre : l ? l.nombre : r.fichaVacia;
+    $('[data-ficha-badge]', ficha)!.textContent = l ? l.nombre : '';
+    $('[data-ficha-svc]', ficha)!.textContent = s ? s.nombre : r.fichaVacia;
     $('[data-f="pelo"]', ficha)!.textContent = peloTexto() || '—';
     const lt = largoTexto();
     $('[data-f="largo"]', ficha)!.textContent = !pideLargo() ? '—' : val('ahora') && val('quiero') ? `${largoNombre(val('ahora'))} → ${largoNombre(val('quiero'))}` : '—';

@@ -1,9 +1,10 @@
 ---
-import '@fontsource-variable/hanken-grotesk/wght';
+import '@fontsource-variable/montserrat/wght';
+import '@fontsource-variable/cinzel/wght';
 import '../styles/global.css';
 import { ui, type Lang } from '../i18n/ui';
 import { negocio, horario } from '../data/negocio';
-import ogImage from '../assets/img/balayage.jpg';
+import ogImage from '../assets/img/fachada.jpg';
 import { getImage } from 'astro:assets';
 
 interface Props { lang: Lang; title?: string; path?: { es: string; ca: string }; noindex?: boolean }
@@ -60,7 +61,7 @@ const jsonLd = {
     <link rel="alternate" hreflang="es" href={urlEs} />
     <link rel="alternate" hreflang="ca" href={urlCa} />
     <link rel="alternate" hreflang="x-default" href={urlEs} />
-    <meta name="theme-color" content="#d3202f" />
+    <meta name="theme-color" content="#141414" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content={lang === 'es' ? 'es_ES' : 'ca_ES'} />

@@ -3,9 +3,15 @@
 ## El negocio
 - Av. de Martí Pujol, 247, 08912 Badalona · 937 04 22 07. Cerca del metro Badalona Pompeu Fabra (L2).
 - Google Maps: **5,0★ con 282 reseñas** (275 de 5★, 4 de 4★, 2 de 1★). La ficha de Google no tiene web ("Agregar sitio web").
-- Horario público (Google y Fresha): mar–vie 10:00–19:00, sáb 9:00–14:00, dom y lun cerrado. peluqueriadechicas.es dice 9:30–19:30: confirmar.
+- Horario: el cartel de la puerta (foto de la fachada) dice mar–vie 9:30–19:30 y sáb 9–14. Google y Fresha dicen 10:00–19:00. La web usa el de la puerta.
 - Directorios: se necesita cita, acceso para silla de ruedas, pago con tarjeta y móvil.
-- Sin Instagram ni Facebook localizados.
+- Sin Instagram ni Facebook localizados por buscador, aunque una foto de su ficha es una captura de Instagram: probablemente tiene cuenta.
+
+## Identidad real (fotos de su ficha de Google)
+- Rótulo negro con MILANO en letras blancas y un trazo rosa en lugar del palo izquierdo de la A; debajo PERRUQUERIA en versales romanas espaciadas. Cuatro focos con brazo iluminan el rótulo.
+- Escaparate grande con perfiles negros y zócalo de piedra; dentro, techo curvo con luces, espejos barrocos dorados, sillones blancos, lavacabezas negros, suelo de roble.
+- Productos: estantería de INSIGHT (cosmética profesional natural hecha en Italia).
+- Trabajos: balayage rubio, castaños con reflejos, ondas largas, trenzas de raíz, dibujos en la nuca, peinados a niñas.
 
 ## Plataformas y comisiones
 - La lista de leads decía "Fresha", pero la ficha de Fresha es **automática y no reclamada**: "Llamar para reservar" y "el negocio no está afiliado ni asociado a Fresha". Debajo anuncia "Reservar online en establecimientos cercanos": manda a sus clientas a otros salones.
