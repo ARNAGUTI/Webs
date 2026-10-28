@@ -121,7 +121,7 @@ const cliente = {
     <div class="zocalo" aria-hidden="true"></div>
   </section>
 
-  <!-- Patri -->
+  <!-- El salón y su forma de trabajar -->
   <section class="patri" id="patri">
     <div class="wrap patri-grid">
       <figure class="marco marco-alto">
@@ -167,7 +167,8 @@ const cliente = {
       </nav>
 
       <form class="cita-form" data-ruta novalidate>
-        <div class="stations">
+        <div class="panel">
+        <div class="stations" data-stations>
           <fieldset class="station" id="st-destino" data-station="destino">
             <legend><span class="st-num" aria-hidden="true">1</span>{r.destino.linea}</legend>
             <div class="chips chips-lines">
@@ -209,16 +210,18 @@ const cliente = {
             <p class="hint">{r.largo.ayuda}</p>
             <p class="hint" data-largo-na hidden>{r.largo.noAplica}</p>
             <div class="largo" data-largo>
-              <div class="largo-head" aria-hidden="true"><span></span><span>{r.largo.ahora}</span><span>{r.largo.quiero}</span></div>
-              {largos.map((l) => (
-                <div class="largo-row" data-largo-row={l.id}>
-                  <span class="largo-name" id={`lg-${l.id}`}>{r.largo.nombres[l.id]}</span>
-                  <label class="largo-pick"><input type="radio" name="ahora" value={l.id} aria-labelledby={`lg-${l.id} ah-l`} /><span class="pick pick-now" aria-hidden="true"></span></label>
-                  <label class="largo-pick"><input type="radio" name="quiero" value={l.id} aria-labelledby={`lg-${l.id} qu-l`} /><span class="pick pick-want" aria-hidden="true"></span></label>
-                </div>
-              ))}
-              <span id="ah-l" hidden>{r.largo.ahora}</span>
-              <span id="qu-l" hidden>{r.largo.quiero}</span>
+              <div class="largo-fila largo-nombres" aria-hidden="true">
+                <span></span>
+                {largos.map((l) => (<span class="largo-name" data-largo-row={l.id}>{r.largo.nombres[l.id]}</span>))}
+              </div>
+              <div class="largo-fila" role="radiogroup" aria-label={r.largo.ahora}>
+                <span class="largo-lbl">{r.largo.ahora}</span>
+                {largos.map((l) => (<label class="largo-pick"><input type="radio" name="ahora" value={l.id} aria-label={`${r.largo.ahora}: ${r.largo.nombres[l.id]}`} /><span class="pick pick-now" aria-hidden="true"></span></label>))}
+              </div>
+              <div class="largo-fila" role="radiogroup" aria-label={r.largo.quiero}>
+                <span class="largo-lbl">{r.largo.quiero}</span>
+                {largos.map((l) => (<label class="largo-pick"><input type="radio" name="quiero" value={l.id} aria-label={`${r.largo.quiero}: ${r.largo.nombres[l.id]}`} /><span class="pick pick-want" aria-hidden="true"></span></label>))}
+              </div>
             </div>
             <p class="largo-msg" data-largo-msg aria-live="polite"></p>
             <label class="check"><input type="checkbox" name="foto" /><span><Icon name="camera" size={18} />{r.largo.foto}</span></label>
@@ -244,6 +247,12 @@ const cliente = {
             </div>
             <label class="check"><input type="checkbox" name="recordar" checked /><span>{r.datos.recordar}</span></label>
           </fieldset>
+        </div>
+        <div class="panel-pie" data-panel-pie>
+          <button type="button" class="btn btn-line-dark" data-atras><Icon name="arrow" size={18} class="flip" />{r.pasoNav.atras}</button>
+          <span class="panel-cuenta" data-cuenta aria-live="polite"></span>
+          <button type="button" class="btn btn-negro" data-sig>{r.pasoNav.sig}<Icon name="arrow" size={18} /></button>
+        </div>
         </div>
 
         <aside class="ficha" data-ficha aria-live="polite">

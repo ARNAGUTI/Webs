@@ -11,7 +11,7 @@ const es = {
       'Peluquería en Av. de Martí Pujol 247, Badalona. Corte, color, balayage y botox capilar con diagnóstico previo, presupuesto claro y productos naturales. 5,0★ en Google. Pide tu cita por WhatsApp.',
   },
   skip: 'Saltar al contenido',
-  nav: { cita: 'Pide cita', servicios: 'Servicios', patri: 'Patri', trabajos: 'Trabajos', visita: 'Horario y mapa' },
+  nav: { cita: 'Pide cita', servicios: 'Servicios', patri: 'El salón', trabajos: 'Trabajos', visita: 'Horario y mapa' },
   llamar: 'Llamar',
   hero: {
     lugar: 'Av. de Martí Pujol, 247 · Badalona',
@@ -23,10 +23,10 @@ const es = {
     escaparate: 'El salón por dentro: espejos dorados y sillones blancos',
   },
   patri: {
-    titulo: 'Te atiende Patri',
+    titulo: 'Un equipo que primero escucha',
     texto:
-      'Antes de cortar o teñir, Patri mira tu pelo: cómo es, cómo está y qué te pide. A partir de ahí te aconseja, te dice el precio antes de empezar y no te vende lo que no necesitas.',
-    foto: 'Patri con una clienta frente a uno de los espejos dorados del salón',
+      'En Milano cada servicio empieza con un diagnóstico. Nuestro equipo de estilistas estudia tu tipo de pelo, su estado y lo que buscas; te recomienda la mejor opción y te da el precio antes de empezar, sin servicios que no necesitas.',
+    foto: 'Una estilista del salón con una clienta frente a uno de los espejos dorados',
     claves: [
       { t: 'Diagnóstico', d: 'Tu tipo de pelo primero; el corte o el color, después.' },
       { t: 'Presupuesto claro', d: 'Sabes lo que vas a pagar antes de sentarte.' },
@@ -41,7 +41,7 @@ const es = {
       infantil: 'Niñas y niños',
     } satisfies Record<LineaId, string>,
     titulo: 'Servicios',
-    intro: 'Precios orientativos. El exacto te lo da Patri cuando ve tu pelo, antes de empezar.',
+    intro: 'Precios orientativos. El precio exacto te lo damos al ver tu pelo, antes de empezar.',
     desde: 'desde {p} €',
     gratis: 'gratis',
     min: '{m} min',
@@ -75,7 +75,7 @@ const es = {
   ruta: {
     titulo: 'Pide tu cita',
     intro:
-      'Cinco pasos y Patri sabe qué quieres antes de que llegues. Al final se abre WhatsApp con la cita ya escrita y ella te confirma la hora.',
+      'Cinco pasos y sabremos qué necesitas antes de que llegues. Al final se abre WhatsApp con la cita ya escrita y el salón te confirma la hora.',
     estaciones: { destino: 'Servicio', pelo: 'Tu pelo', largo: 'Largo', hora: 'Día y hora', datos: 'Tus datos' },
     destino: { linea: '¿Qué te quieres hacer?', servicio: 'Elige el servicio' },
     pelo: {
@@ -106,15 +106,16 @@ const es = {
     datos: {
       nombre: 'Nombre',
       tel: 'Móvil',
-      nota: 'Algo que deba saber Patri (opcional)',
+      nota: 'Algo que debamos saber (opcional)',
       notaPh: 'Ej.: es para una boda, tengo el pelo muy largo…',
       recordar: 'Recordar mis datos en este móvil',
       hola: 'Hola de nuevo, {n}.',
       noSoy: 'No soy yo',
     },
     ficha: 'Tu ficha',
+    pasoNav: { sig: 'Siguiente', atras: 'Atrás', de: 'Paso {n} de 5' },
     fichaVacia: 'Elige un servicio para empezar.',
-    precioOrientativo: 'Orientativo: el precio final te lo da Patri al ver tu pelo.',
+    precioOrientativo: 'Orientativo: el precio final te lo damos al ver tu pelo.',
     enviar: 'Enviar cita por WhatsApp',
     llamarMejor: '¿Prefieres llamar? ',
     guardado: 'Has vuelto: tu cita está como la dejaste.',
@@ -131,7 +132,7 @@ const es = {
       tel: 'Escribe un móvil de 9 cifras para poder confirmarte.',
     },
     msg: {
-      hola: 'Hola Patri, soy {n}. Quiero cita para {s} el {d} a las {h}.',
+      hola: 'Hola, soy {n}. Quiero pedir cita en Milano para {s} el {d} a las {h}.',
       pelo: 'Mi pelo: {x}.',
       largo: 'Ahora lo llevo por {a} y lo quiero por {q}.',
       largoIgual: 'Quiero mantener el largo (por {a}).',
@@ -140,11 +141,11 @@ const es = {
       nota: 'Nota: {x}',
     },
     okTitulo: 'Listo. Solo falta pulsar Enviar en WhatsApp.',
-    okTexto: 'Patri te confirma por WhatsApp. Si esa hora ya está cogida, te propone otra.',
+    okTexto: 'Te confirmaremos la cita por WhatsApp. Si esa hora ya está ocupada, te propondremos otra.',
     calendario: 'Añadir a mi calendario',
     otra: 'Pedir otra cita',
     abrirDeNuevo: 'Abrir WhatsApp otra vez',
-    comoFunciona: 'Las horas son las de apertura; Patri confirma la disponibilidad real.',
+    comoFunciona: 'Las horas mostradas son las de apertura; el salón confirma la disponibilidad.',
   },
   trabajos: {
     titulo: 'Salido de sus manos',
@@ -160,7 +161,7 @@ const es = {
   productos: {
     titulo: 'Lo que le pones a tu pelo importa',
     texto:
-      'En el salón se trabaja con INSIGHT, cosmética profesional de origen natural hecha en Italia. Patri te aconseja cuál va con tu pelo, para que en casa lo cuides igual.',
+      'En el salón se trabaja con INSIGHT, cosmética profesional de origen natural hecha en Italia. Te aconsejamos el adecuado para tu pelo, para que en casa lo cuides igual que en el salón.',
     foto: 'Estantería del salón con champús y mascarillas INSIGHT',
   },
   opiniones: {
@@ -168,7 +169,7 @@ const es = {
     nota: '{v} de 5 en Google · {n} reseñas',
     ver: 'Leer todas en Google',
     lista: [
-      { q: 'Patri diagnostica tu tipo de pelo y a partir de aquí te recomienda, y se nota que sabe.', a: 'Marta G.' },
+      { q: 'Muy buen servicio, muy atentas y me hicieron muy buen corte de pelo, volveré.', a: 'Reseña en Google' },
       { q: 'Me hizo una balayage en tono caramelo preciosa. El color quedó súper natural.', a: 'Lydia G.' },
       { q: 'Te asesora y da un diagnóstico preciso para tu tipo de cabello sin gastar de más.', a: 'Reseña en Google' },
       { q: 'Llevé a mi hijo de 3 años por recomendación de una amiga y fue un acierto.', a: 'Reseña en Google' },
@@ -195,7 +196,7 @@ const es = {
     titulo: 'Lo que más nos preguntan por teléfono',
     lista: [
       { q: '¿Hace falta cita?', a: 'Sí, trabajamos con cita para dedicarte el tiempo que necesitas. Pídela aquí o llámanos.' },
-      { q: '¿Cuánto me va a costar?', a: 'Los precios de la web son orientativos. Patri mira tu pelo y te dice el precio exacto antes de empezar.' },
+      { q: '¿Cuánto me va a costar?', a: 'Los precios de la web son orientativos. Valoramos tu pelo y te damos el precio exacto antes de empezar.' },
       { q: '¿Y si no sé qué hacerme?', a: 'Elige "Diagnóstico capilar" en Tratamientos. Vienes, lo miramos y te aconsejamos sin compromiso.' },
       { q: '¿Atendéis a niños?', a: 'Sí: cortes, trenzas y peinados para niñas y niños de todas las edades, con calma.' },
       { q: '¿Cómo cambio o anulo la cita?', a: 'Escríbenos por WhatsApp o llámanos con un día de antelación si puedes, así otra persona aprovecha la hora.' },
@@ -218,7 +219,7 @@ const ca: typeof es = {
       'Perruqueria a l’Av. de Martí Pujol 247, Badalona. Tall, color, balayage i bòtox capil·lar amb diagnòstic previ, pressupost clar i productes naturals. 5,0★ a Google. Demana hora per WhatsApp.',
   },
   skip: 'Salta al contingut',
-  nav: { cita: 'Demana hora', servicios: 'Serveis', patri: 'Patri', trabajos: 'Treballs', visita: 'Horari i mapa' },
+  nav: { cita: 'Demana hora', servicios: 'Serveis', patri: 'El saló', trabajos: 'Treballs', visita: 'Horari i mapa' },
   llamar: 'Trucar',
   hero: {
     lugar: 'Av. de Martí Pujol, 247 · Badalona',
@@ -230,10 +231,10 @@ const ca: typeof es = {
     escaparate: 'El saló per dins: miralls daurats i butaques blanques',
   },
   patri: {
-    titulo: 'T’atén la Patri',
+    titulo: 'Un equip que primer escolta',
     texto:
-      'Abans de tallar o tenyir, la Patri mira el teu cabell: com és, com està i què et demana. A partir d’aquí t’aconsella, et diu el preu abans de començar i no et ven el que no necessites.',
-    foto: 'La Patri amb una clienta davant d’un dels miralls daurats del saló',
+      'A Milano cada servei comença amb un diagnòstic. El nostre equip d’estilistes estudia el teu tipus de cabell, el seu estat i el que busques; et recomana la millor opció i et dona el preu abans de començar, sense serveis que no necessites.',
+    foto: 'Una estilista del saló amb una clienta davant d’un dels miralls daurats',
     claves: [
       { t: 'Diagnòstic', d: 'Primer el teu tipus de cabell; el tall o el color, després.' },
       { t: 'Pressupost clar', d: 'Saps què pagaràs abans de seure.' },
@@ -243,7 +244,7 @@ const ca: typeof es = {
   lineas: {
     nombres: { corte: 'Tall i pentinat', color: 'Color i metxes', tratamiento: 'Tractaments', infantil: 'Nenes i nens' },
     titulo: 'Serveis',
-    intro: 'Preus orientatius. L’exacte te’l dona la Patri quan veu el teu cabell, abans de començar.',
+    intro: 'Preus orientatius. El preu exacte te’l donem quan veiem el teu cabell, abans de començar.',
     desde: 'des de {p} €',
     gratis: 'gratuït',
     min: '{m} min',
@@ -277,7 +278,7 @@ const ca: typeof es = {
   ruta: {
     titulo: 'Demana hora',
     intro:
-      'Cinc passos i la Patri sap què vols abans que arribis. Al final s’obre WhatsApp amb la cita ja escrita i ella et confirma l’hora.',
+      'Cinc passos i sabrem què necessites abans que arribis. Al final s’obre WhatsApp amb la cita ja escrita i el saló et confirma l’hora.',
     estaciones: { destino: 'Servei', pelo: 'El teu cabell', largo: 'Llargada', hora: 'Dia i hora', datos: 'Les teves dades' },
     destino: { linea: 'Què et vols fer?', servicio: 'Tria el servei' },
     pelo: {
@@ -301,15 +302,16 @@ const ca: typeof es = {
     datos: {
       nombre: 'Nom',
       tel: 'Mòbil',
-      nota: 'Alguna cosa que hagi de saber la Patri (opcional)',
+      nota: 'Alguna cosa que hàgim de saber (opcional)',
       notaPh: 'Ex.: és per a un casament, tinc el cabell molt llarg…',
       recordar: 'Recordar les meves dades en aquest mòbil',
       hola: 'Hola de nou, {n}.',
       noSoy: 'No sóc jo',
     },
     ficha: 'La teva fitxa',
+    pasoNav: { sig: 'Següent', atras: 'Enrere', de: 'Pas {n} de 5' },
     fichaVacia: 'Tria un servei per començar.',
-    precioOrientativo: 'Orientatiu: el preu final te’l dona la Patri quan veu el teu cabell.',
+    precioOrientativo: 'Orientatiu: el preu final te’l donem quan veiem el teu cabell.',
     enviar: 'Enviar la cita per WhatsApp',
     llamarMejor: 'Prefereixes trucar? ',
     guardado: 'Has tornat: la teva cita està com la vas deixar.',
@@ -326,7 +328,7 @@ const ca: typeof es = {
       tel: 'Escriu un mòbil de 9 xifres per poder confirmar-te.',
     },
     msg: {
-      hola: 'Hola Patri, sóc {n}. Vull hora per a {s} el {d} a les {h}.',
+      hola: 'Hola, sóc {n}. Voldria demanar hora a Milano per a {s} el {d} a les {h}.',
       pelo: 'El meu cabell: {x}.',
       largo: 'Ara el porto per {a} i el vull per {q}.',
       largoIgual: 'Vull mantenir la llargada (per {a}).',
@@ -335,11 +337,11 @@ const ca: typeof es = {
       nota: 'Nota: {x}',
     },
     okTitulo: 'Fet. Només cal prémer Enviar a WhatsApp.',
-    okTexto: 'La Patri et confirma per WhatsApp. Si aquella hora ja està agafada, te’n proposa una altra.',
+    okTexto: 'Et confirmarem la cita per WhatsApp. Si aquella hora ja està ocupada, te’n proposarem una altra.',
     calendario: 'Afegir al meu calendari',
     otra: 'Demanar una altra hora',
     abrirDeNuevo: 'Obrir WhatsApp un altre cop',
-    comoFunciona: 'Les hores són les d’obertura; la Patri confirma la disponibilitat real.',
+    comoFunciona: 'Les hores que es mostren són les d’obertura; el saló confirma la disponibilitat.',
   },
   trabajos: {
     titulo: 'Sortit de les seves mans',
@@ -355,7 +357,7 @@ const ca: typeof es = {
   productos: {
     titulo: 'El que poses al teu cabell importa',
     texto:
-      'Al saló es treballa amb INSIGHT, cosmètica professional d’origen natural feta a Itàlia. La Patri t’aconsella quin va amb el teu cabell, perquè a casa el cuidis igual.',
+      'Al saló es treballa amb INSIGHT, cosmètica professional d’origen natural feta a Itàlia. T’aconsellem l’adequat per al teu cabell, perquè a casa el cuidis igual que al saló.',
     foto: 'Prestatgeria del saló amb xampús i mascaretes INSIGHT',
   },
   opiniones: {
@@ -363,7 +365,7 @@ const ca: typeof es = {
     nota: '{v} de 5 a Google · {n} ressenyes',
     ver: 'Llegir-les totes a Google',
     lista: [
-      { q: 'Patri diagnostica tu tipo de pelo y a partir de aquí te recomienda, y se nota que sabe.', a: 'Marta G.' },
+      { q: 'Muy buen servicio, muy atentas y me hicieron muy buen corte de pelo, volveré.', a: 'Reseña en Google' },
       { q: 'Me hizo una balayage en tono caramelo preciosa. El color quedó súper natural.', a: 'Lydia G.' },
       { q: 'Te asesora y da un diagnóstico preciso para tu tipo de cabello sin gastar de más.', a: 'Ressenya a Google' },
       { q: 'Llevé a mi hijo de 3 años por recomendación de una amiga y fue un acierto.', a: 'Ressenya a Google' },
@@ -390,7 +392,7 @@ const ca: typeof es = {
     titulo: 'El que més ens pregunten per telèfon',
     lista: [
       { q: 'Cal demanar hora?', a: 'Sí, treballem amb cita per dedicar-te el temps que necessites. Demana-la aquí o truca’ns.' },
-      { q: 'Quant em costarà?', a: 'Els preus del web són orientatius. La Patri mira el teu cabell i et diu el preu exacte abans de començar.' },
+      { q: 'Quant em costarà?', a: 'Els preus del web són orientatius. Valorem el teu cabell i et donem el preu exacte abans de començar.' },
       { q: 'I si no sé què fer-me?', a: 'Tria "Diagnòstic capil·lar" a Tractaments. Véns, el mirem i t’aconsellem sense compromís.' },
       { q: 'Ateneu nens?', a: 'Sí: talls, trenes i pentinats per a nenes i nens de totes les edats, amb calma.' },
       { q: 'Com canvio o anul·lo la cita?', a: 'Escriu-nos per WhatsApp o truca’ns amb un dia d’antelació si pots, així una altra persona aprofita l’hora.' },

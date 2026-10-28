@@ -234,6 +234,24 @@ section { position: relative; }
 .cita-form { display: grid; grid-template-columns: minmax(0, 1fr) 350px; gap: clamp(20px, 3vw, 40px); margin-top: 20px; align-items: start; }
 .cita-form.is-sent { opacity: 0.45; pointer-events: none; }
 .stations { display: grid; gap: 14px; }
+/* Con JS, un paso cada vez dentro de un panel ancho de altura estable. */
+.panel { min-width: 0; }
+.is-wizard .stations { display: block; }
+.is-wizard .station { display: none; min-height: 380px; border-radius: var(--radius) var(--radius) 0 0; }
+.is-wizard .station.is-active { display: block; animation: paso 0.45s var(--ease-out); }
+.station:focus { outline: none; }
+@keyframes paso { from { opacity: 0; transform: translateX(18px); } }
+.panel-pie { display: none; }
+.is-wizard .panel-pie {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  background: var(--blanco); border: 1px solid var(--rule); border-top: 0; border-radius: 0 0 var(--radius) var(--radius); padding: 14px clamp(20px, 3vw, 32px);
+}
+.panel-cuenta { font-size: 0.85rem; color: var(--ink-3); font-weight: 600; letter-spacing: 0.04em; }
+.btn-negro { background: var(--negro); color: #fff; }
+.btn-negro:hover { background: #000; }
+.icon.flip { transform: scaleX(-1); }
+.pasos-lista li.is-current .paso-num { box-shadow: 0 0 0 4px var(--rosa-velo); border-color: var(--rosa); }
+.pasos-lista li.is-current .paso-name { color: var(--ink); }
 .station { margin: 0; min-width: 0; border: 1px solid var(--rule); padding: clamp(20px, 3vw, 32px); background: var(--blanco); border-radius: var(--radius); }
 .station legend {
   float: left; width: 100%; display: flex; align-items: center; gap: 14px; margin-bottom: 20px;
@@ -262,7 +280,8 @@ section { position: relative; }
 .chip input:disabled + span { opacity: 0.35; text-decoration: line-through; cursor: not-allowed; }
 .chip-check span .icon { display: none; }
 .chip-check input:checked + span .icon { display: block; }
-.chips-lines { display: grid; grid-template-columns: repeat(2, 1fr); }
+.chips-lines { display: grid; grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 1100px) { .chips-lines { grid-template-columns: repeat(2, 1fr); } }
 .chip-line span { min-height: 54px; justify-content: center; font-weight: 650; }
 .chips-days { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 6px; scroll-snap-type: x mandatory; }
 .chip-day span { flex-direction: column; gap: 0; min-width: 66px; padding: 8px 10px; line-height: 1.15; border-radius: var(--radius); scroll-snap-align: start; }
@@ -271,11 +290,12 @@ section { position: relative; }
 .chips-slots { margin-top: 14px; }
 .chip-slot span { min-width: 80px; justify-content: center; font-variant-numeric: tabular-nums; }
 
-.svc-list { display: grid; gap: 8px; }
+.svc-list { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); }
 .svc {
-  position: relative; display: flex; align-items: center; gap: 14px; padding: 14px 16px;
+  position: relative; display: grid; grid-template-columns: auto 1fr; align-content: start; gap: 8px 12px; padding: 16px;
   border: 1px solid var(--rule); border-radius: var(--radius); cursor: pointer; transition: border-color 0.15s, background-color 0.15s;
 }
+.svc .svc-meta { grid-column: 2; justify-items: start; text-align: left; grid-auto-flow: column; justify-content: start; gap: 10px; align-items: baseline; }
 .svc::before {
   content: ''; flex: none; width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid var(--rule-2); background: var(--blanco);
   transition: all 0.15s;
@@ -292,19 +312,20 @@ section { position: relative; }
 .svc:has(input:checked)::before { border: 5px solid var(--rosa); }
 .svc:has(input:focus-visible) { outline: 3px solid var(--rosa); outline-offset: 2px; }
 
-.largo { margin-top: 10px; display: grid; max-width: 420px; position: relative; }
+.largo { margin-top: 14px; display: grid; gap: 4px; position: relative; overflow-x: auto; padding-bottom: 4px; }
 .largo.is-optional { opacity: 0.45; }
-.largo::before { content: ''; position: absolute; left: 10px; top: 52px; bottom: 25px; width: 2px; background: var(--rule-2); }
-.largo-head, .largo-row { display: grid; grid-template-columns: 1fr 76px 76px; align-items: center; }
-.largo-head { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-3); padding-bottom: 6px; }
-.largo-head span { text-align: center; }
-.largo-row { min-height: 50px; border-top: 1px solid var(--rule); position: relative; }
-.largo-name { font-weight: 550; padding-left: 28px; position: relative; }
-.largo-name::before { content: ''; position: absolute; left: 6px; top: 50%; width: 10px; height: 10px; margin-top: -5px; border-radius: 50%; background: var(--rule-2); }
-.largo-row.is-cut .largo-name::before { background: var(--rosa-luz); }
-.largo-row.is-want .largo-name::before { background: var(--rosa); }
-.largo-row.is-now .largo-name::before { background: var(--ink); }
-.largo-pick { display: grid; place-items: center; min-height: 48px; cursor: pointer; }
+.largo-fila { display: grid; grid-template-columns: 96px repeat(6, minmax(64px, 1fr)); align-items: center; min-width: 520px; }
+.largo-nombres { position: relative; padding-bottom: 14px; }
+/* La regla del largo: una línea con una marca por altura, como un peine visto de lado. */
+.largo-nombres::after { content: ''; position: absolute; left: 96px; right: 0; bottom: 5px; height: 2px; background: var(--rule-2); }
+.largo-name { position: relative; text-align: center; font-weight: 600; font-size: 0.85rem; color: var(--ink-2); }
+.largo-name::after { content: ''; position: absolute; left: 50%; bottom: -14px; width: 10px; height: 10px; margin-left: -5px; border-radius: 50%; background: var(--rule-2); z-index: 1; }
+.largo-name.is-cut::after { background: var(--rosa-luz); }
+.largo-name.is-want::after { background: var(--rosa); }
+.largo-name.is-now::after { background: var(--ink); }
+.largo-name.is-now, .largo-name.is-want { color: var(--ink); }
+.largo-lbl { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-3); }
+.largo-pick { display: grid; place-items: center; min-height: 46px; cursor: pointer; }
 .pick { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid var(--rule-2); background: var(--blanco); transition: all 0.15s; }
 .largo-pick:hover .pick { border-color: var(--ink); }
 .largo-pick input:checked + .pick-now { border: 8px solid var(--ink); }
@@ -322,9 +343,10 @@ section { position: relative; }
 }
 .check input:focus-visible + span::before { outline: 3px solid var(--rosa); outline-offset: 2px; }
 
-.fields { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.field { display: grid; gap: 6px; font-weight: 650; font-size: 0.9rem; }
-.field-wide { grid-column: 1 / -1; }
+.fields { display: grid; grid-template-columns: 1fr 1fr 1.6fr; gap: 14px; }
+.field { display: grid; gap: 6px; font-weight: 650; font-size: 0.9rem; align-content: start; }
+.field-wide { grid-column: auto; }
+@media (max-width: 1100px) { .fields { grid-template-columns: 1fr 1fr; } .field-wide { grid-column: 1 / -1; } }
 .field input {
   font: inherit; font-weight: 500; font-size: 1.0625rem; min-height: 50px; padding: 0 14px;
   border: 1px solid var(--rule-2); border-radius: var(--radius); background: var(--blanco); color: var(--ink); caret-color: var(--rosa);
@@ -374,9 +396,8 @@ p.err { margin-top: 10px; }
   .ficha .btn-block { grid-column: 2; grid-row: 1 / span 2; width: auto; min-height: 48px; padding: 0 14px; font-size: 0.9rem; }
 }
 @media (max-width: 560px) {
-  .chips-lines, .fields { grid-template-columns: 1fr; }
-  .svc { flex-wrap: wrap; }
-  .svc-meta { justify-items: start; text-align: left; grid-auto-flow: column; gap: 10px; align-items: baseline; width: 100%; padding-left: 32px; }
+  .fields { grid-template-columns: 1fr; }
+  .field-wide { grid-column: auto; }
 }
 
 /* ---------- Servicios: la carta ---------- */
@@ -487,6 +508,31 @@ p.err { margin-top: 10px; }
 .legal h2 { font-family: var(--serif); font-size: 1.3rem; font-weight: 600; margin: 32px 0 10px; }
 .legal p { color: var(--ink-2); margin-bottom: 12px; }
 
+
+/* ---------- Toques de peluquería ---------- */
+/* Bajo cada título: unas tijeras abiertas que cortan un filete dorado. */
+.h2::after {
+  content: ''; display: block; width: 150px; height: 18px; margin-top: 18px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 150 18' fill='none' stroke='%23b08636' stroke-width='1.4' stroke-linecap='round'%3E%3Ccircle cx='4.5' cy='4.5' r='3.3'/%3E%3Ccircle cx='4.5' cy='13.5' r='3.3'/%3E%3Cpath d='M7.3 6.4 24 13.2M7.3 11.6 24 4.8'/%3E%3Cpath d='M30 9h120' stroke-dasharray='1 0'/%3E%3C/svg%3E") left center / contain no-repeat;
+}
+.servicios .h2::after { filter: brightness(1.35); }
+/* Las púas del peine: la chapa negra de la carta y del pie empieza con un peine. */
+.servicios::before, .pie::before {
+  content: ''; position: absolute; left: 0; right: 0; top: -12px; height: 12px;
+  background: repeating-linear-gradient(90deg, var(--negro) 0 3px, transparent 3px 9px);
+}
+.pie { position: relative; margin-top: 12px; }
+/* Mechones: trazos finos que caen detrás de la cita y de los productos. */
+.cita, .productos { overflow: hidden; }
+.cita::before, .productos::before {
+  content: ''; position: absolute; pointer-events: none; z-index: 0;
+  width: min(560px, 60vw); aspect-ratio: 560 / 420;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 560 420' fill='none' stroke='%23b08636' stroke-opacity='.22' stroke-width='1.2'%3E%3Cpath d='M540 0C470 80 520 160 430 230S300 330 250 420'/%3E%3Cpath d='M520 0C445 85 495 165 405 235S270 335 215 420'/%3E%3Cpath d='M500 0C420 90 470 170 380 240S240 340 180 420'/%3E%3Cpath d='M480 0C398 92 446 176 356 246S212 346 146 420'/%3E%3Cpath d='M558 30C500 110 548 186 470 250S356 344 318 420' stroke='%23d97fae' stroke-opacity='.35'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+.cita::before { top: 0; right: 0; }
+.productos::before { bottom: -40px; left: -60px; transform: scaleX(-1); }
+.cita > .wrap, .productos > .wrap { position: relative; z-index: 1; }
+
 /* ---------- El momento: se encienden los focos y se pinta el trazo ---------- */
 @media (prefers-reduced-motion: no-preference) {
   .js .rotulo { animation: luz 1.4s 0.1s ease-out both; }
@@ -504,3 +550,13 @@ p.err { margin-top: 10px; }
 /* La foto del balayage trae un icono de Instagram abajo a la izquierda: se queda fuera del encuadre. */
 .galeria .g1 img { transform: scale(1.14); transform-origin: 75% 15%; }
 .galeria .g1:hover img { transform: scale(1.18); }
+@media (max-width: 560px) {
+  .largo-fila { grid-template-columns: 52px repeat(6, 1fr); min-width: 0; column-gap: 4px; }
+  .largo-nombres::after { left: 52px; }
+  .largo-name { font-size: 0.66rem; line-height: 1.2; hyphens: auto; }
+  .largo-lbl { font-size: 0.62rem; letter-spacing: 0.04em; }
+  .pick { width: 24px; height: 24px; }
+  .largo-pick input:checked + .pick-now, .largo-pick input:checked + .pick-want { border-width: 7px; }
+  .is-wizard .station { min-height: 0; }
+}
+@media (max-width: 560px) { .panel-cuenta { display: none; } .is-wizard .panel-pie { padding-inline: 16px; } }

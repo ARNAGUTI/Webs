@@ -340,7 +340,60 @@ function initRuta(c: Cliente, now: ReturnType<typeof nowMadrid>, tramosDe: (d: D
     quitarBanderita();
     actualizar();
   }
-  $('[data-empezar]')?.addEventListener('click', () => { reiniciar(); go($('[data-station="destino"]', form)); });
+  $('[data-empezar]')?.addEventListener('click', () => { reiniciar(); mostrar(0); });
+
+  // ---------- Un paso cada vez, a lo ancho ----------
+  const pasos = ['destino', 'pelo', 'largo', 'hora', 'datos'] as const;
+  const estacionesEl = pasos.map((p) => $(`[data-station="${p}"]`, form)!);
+  const btnSig = $<HTMLButtonElement>('[data-sig]', form)!;
+  const btnAtras = $<HTMLButtonElement>('[data-atras]', form)!;
+  const cuenta = $('[data-cuenta]', form)!;
+  const pasosNav = map.closest('nav')!;
+  let actual = 0;
+  form.classList.add('is-wizard');
+  estacionesEl.forEach((st) => st.setAttribute('tabindex', '-1'));
+
+  function mostrar(i: number, foco = true) {
+    actual = Math.max(0, Math.min(pasos.length - 1, i));
+    estacionesEl.forEach((st, k) => st.classList.toggle('is-active', k === actual));
+    $$('[data-stop]', map).forEach((li, k) => {
+      li.classList.toggle('is-current', k === actual);
+      li.querySelector('a')?.setAttribute('aria-current', k === actual ? 'step' : 'false');
+    });
+    btnAtras.style.visibility = actual === 0 ? 'hidden' : 'visible';
+    btnSig.hidden = actual === pasos.length - 1;
+    cuenta.textContent = fill(r.pasoNav.de, { n: actual + 1 });
+    if (!foco) return;
+    // Si el panel ha quedado fuera de la vista, se vuelve a los pasos.
+    const top = form.getBoundingClientRect().top;
+    if (top < 60 || top > innerHeight * 0.7) go(pasosNav);
+    estacionesEl[actual].focus({ preventScroll: true });
+  }
+  // El largo solo se pregunta si hay corte; si no, se salta ese paso.
+  const salto = (desde: number, dir: 1 | -1) => {
+    const k = desde + dir;
+    return pasos[k] === 'largo' && !pideLargo() ? k + dir : k;
+  };
+  function errorDelPaso(k: number): [string, string] | null {
+    const p = pasos[k];
+    if (p === 'destino' && !servicioSel()) return ['servicio', r.errores.servicio];
+    if (p === 'pelo' && !val('pelo')) return ['pelo', r.errores.pelo];
+    if (p === 'largo' && pideLargo()) {
+      if (!val('ahora') || !val('quiero')) return ['largo', r.errores.largo];
+      if (!largoOk()) return ['largo', r.errores.alargar];
+    }
+    if (p === 'hora' && !diaSel()) return ['dia', r.errores.dia];
+    if (p === 'hora' && !val('hora')) return ['hora', r.errores.hora];
+    return null;
+  }
+  function siguiente() {
+    const e = errorDelPaso(actual);
+    if (e) { setErr(e[0], e[1]); return; }
+    mostrar(salto(actual, 1));
+  }
+  btnSig.addEventListener('click', siguiente);
+  btnAtras.addEventListener('click', () => mostrar(salto(actual, -1)));
+  $$<HTMLAnchorElement>('a', map).forEach((a, k) => a.addEventListener('click', (ev) => { ev.preventDefault(); mostrar(k); }));
 
   form.addEventListener('change', (ev) => {
     const name = (ev.target as HTMLInputElement).name;
@@ -352,15 +405,9 @@ function initRuta(c: Cliente, now: ReturnType<typeof nowMadrid>, tramosDe: (d: D
     quitarBanderita();
     actualizar();
     guardarTrayecto();
-    // En el móvil, al cerrar una parada se baja a la siguiente.
-    const siguiente: Record<string, string> = { servicio: 'pelo', pelo: 'largo', quiero: 'hora', hora: 'datos' };
-    let next = siguiente[name];
-    if (name === 'pelo' && !pideLargo()) next = 'hora';
-    if (name === 'quiero' && !largoOk()) next = '';
-    if (next && matchMedia('(max-width: 900px)').matches) {
-      const st = $(`[data-station="${next}"]`, form);
-      if (st && !st.classList.contains('is-done')) setTimeout(() => go(st), 200);
-    }
+    // Elegir servicio u hora cierra el paso: se pasa solo al siguiente.
+    if (name === 'servicio' && servicioSel()) setTimeout(() => siguiente(), 260);
+    if (name === 'hora' && val('hora')) setTimeout(() => siguiente(), 260);
   });
   form.addEventListener('input', (ev) => {
     const el = ev.target as HTMLInputElement;
@@ -396,8 +443,9 @@ function initRuta(c: Cliente, now: ReturnType<typeof nowMadrid>, tramosDe: (d: D
       const errEl = $(`[data-err="${first}"]`, form);
       const station = errEl?.closest('.station');
       const target = form.querySelector<HTMLElement>(`[name="${first}"]:not(:disabled)`) ?? station?.querySelector<HTMLElement>('input:not(:disabled)');
+      const k = pasos.findIndex((p) => station?.getAttribute('data-station') === p);
+      if (k >= 0) mostrar(k);
       target?.focus({ preventScroll: true });
-      go(station ?? target ?? null, 'center');
       return;
     }
     guardar(CLIENTE, campo('recordar').checked ? { n, tel } : null);
@@ -457,10 +505,10 @@ function initRuta(c: Cliente, now: ReturnType<typeof nowMadrid>, tramosDe: (d: D
     okBox.hidden = true;
     form.classList.remove('is-sent');
     reiniciar();
-    go($('[data-station="destino"]', form));
+    mostrar(0);
   });
 
-  // Destinos del andén y precios: entran en la ruta con la línea o el servicio ya puestos.
+  // La carta de precios entra en la cita con el servicio ya puesto.
   const elegirLinea = (id: string) => {
     marcar('linea', id);
     pintarLinea();
@@ -479,15 +527,23 @@ function initRuta(c: Cliente, now: ReturnType<typeof nowMadrid>, tramosDe: (d: D
       pintarHoras();
       actualizar();
       guardarTrayecto();
+      mostrar(1, false);
     }),
   );
 
+  // Sin familia elegida se verían los diez servicios: se abre en Corte y peinado.
+  if (!lineaSel()) marcar('linea', c.lineas[0].id);
   pintarLinea();
   saludo();
+  let inicio = 0;
   if (restaurar()) {
     actualizar();
     banderita();
     if (resume) resume.hidden = false;
+    const done = completo();
+    const k = pasos.findIndex((p) => !done[p]);
+    inicio = k < 0 ? pasos.length - 1 : k;
   }
   actualizar();
+  mostrar(inicio, false);
 }

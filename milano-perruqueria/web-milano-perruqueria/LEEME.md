@@ -14,11 +14,11 @@ Abre http://localhost:4323 (catalán: http://localhost:4323/ca/). Versión final
 
 ## La idea
 
-La web es su propio salón: arranca en su fachada (el rótulo negro con MILANO y el trazo rosa sobre la A, recreado en la web, y su escaparate iluminado) y sigue con sus espejos dorados, sus fotos reales (Patri, el local, sus trabajos y sus productos INSIGHT). Cuando la vea, tiene que reconocer su peluquería.
+La web es su propio salón: arranca en su fachada (el rótulo negro con MILANO y el trazo rosa sobre la A, recreado en la web, y su escaparate iluminado) y sigue con sus espejos dorados y sus fotos reales (el local, el equipo, sus trabajos y sus productos INSIGHT). Habla en nombre del salón y de su equipo, no de una sola persona. Toques de peluquería discretos: tijeras bajo los títulos, púas de peine en las franjas negras y mechones dibujados al fondo.
 
 ## Lo que le vendes a Patri
 
-**Pide tu cita** en cinco pasos:
+**Pide tu cita** en cinco pasos, uno cada vez y a lo ancho (Siguiente / Atrás), para no tener que bajar:
 
 1. **Servicio**: corte, color, tratamientos o niños, y el servicio con su precio "desde".
 2. **Tu pelo**: liso, ondulado o rizado, y si está teñido, con canas, seco o fino.
@@ -28,7 +28,7 @@ La web es su propio salón: arranca en su fachada (el rótulo negro con MILANO y
 
 Al enviar se abre WhatsApp con todo escrito:
 
-> Hola Patri, soy Laura. Quiero cita para Corte y peinado el jueves 29 oct a las 11:00.
+> Hola, soy Laura. Quiero pedir cita en Milano para Corte y peinado el jueves 29 oct a las 11:00.
 > Mi pelo: ondulado, teñido o con mechas.
 > Ahora lo llevo por pecho y lo quiero por hombros.
 > Te mando foto de referencia.
@@ -36,7 +36,7 @@ Al enviar se abre WhatsApp con todo escrito:
 
 Además: si la clienta lo deja a medias, al volver se encuentra su cita como la dejó; botón "Añadir a mi calendario" con aviso 3 h antes; mapa que solo se carga al pulsar (sin cookies de Google antes); preguntas típicas de teléfono respondidas.
 
-Límite honesto: la web no sabe qué horas tiene ya ocupadas; Patri confirma o propone otra. Si más adelante quiere agenda con huecos reales, se puede conectar Google Calendar como en la web de Johny García Barber.
+Límite honesto: la web no sabe qué horas tiene ya ocupadas; el salón confirma o propone otra. Si más adelante quiere agenda con huecos reales, se puede conectar Google Calendar como en la web de Johny García Barber.
 
 ## Enséñasela a Patri
 
@@ -50,7 +50,7 @@ Todo está en `src/data/negocio.ts`:
 - **WhatsApp** del salón (ahora vacío).
 - **Horario**: el del cartel de su puerta (mar–vie 9:30–19:30, sáb 9–14). Google y Fresha dicen 10–19.
 - **Servicios y precios**: los precios son de ejemplo ("desde").
-- **Fotos**: son las de su ficha de Google Maps (fachada, interior, Patri, trabajos, productos), ver `src/assets/img/PROCEDENCIA.txt`. Confirmar que se pueden usar y que la de `patri.jpg` es ella; si quiere otras, se cambian con el mismo nombre.
+- **Fotos**: son las de su ficha de Google Maps (fachada, interior, Patri, trabajos, productos), ver `src/assets/img/PROCEDENCIA.txt`. Confirmar que se pueden usar; si quiere otras, se cambian con el mismo nombre.
 - **Productos**: la web dice que trabaja con INSIGHT (se ve en su estantería). Confirmar.
 - **Instagram**: una de sus fotos viene de Instagram; si tiene cuenta, se añade el enlace.
 - **Aviso legal**: titular, NIF y email en `src/components/Legal.astro` (marcados con [ ]).
