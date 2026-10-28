@@ -1,0 +1,440 @@
+---
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import { ui, type Lang } from '../i18n/ui';
+import { negocio, horario, horarioConfirmado, servicios, barberos } from '../data/negocio';
+
+import imgLocal from '../assets/img/local.jpg';
+import imgCorteTijera from '../assets/img/corte-tijera.jpg';
+import imgDegradado from '../assets/img/degradado-perfil.jpg';
+import imgBarba from '../assets/img/barba-tijera.jpg';
+import imgHerramientas from '../assets/img/herramientas.jpg';
+import imgCaballero from '../assets/img/corte-caballero.jpg';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = ui[lang];
+const other: Lang = lang === 'es' ? 'ca' : 'es';
+const hrefFor = (l: Lang) => (l === 'es' ? '/' : '/ca/');
+const tel = `tel:${negocio.telefonoE164}`;
+const wa = `https://wa.me/${negocio.whatsapp}`;
+const v = negocio.valoracion;
+// Con agenda de Google, las horas ocupadas se bloquean solas; sin ella, la cita va por WhatsApp.
+const agendaActiva = barberos.length > 0;
+const fill = (tpl: string, vars: Record<string, string | number>) => tpl.replace(/\{(\w)\}/g, (_, k) => String(vars[k] ?? ''));
+
+// Cinta de trabajos. Para añadir un vídeo: guárdalo en public/videos/ y pon
+// video: '/videos/nombre.mp4' en una entrada (la foto hace de portada).
+const galeria: { key: keyof typeof t.trabajos.alts; src: ImageMetadata; video?: string }[] = [
+  { key: 'corte-tijera', src: imgCorteTijera },
+  { key: 'degradado-perfil', src: imgDegradado },
+  { key: 'barba-tijera', src: imgBarba },
+  { key: 'herramientas', src: imgHerramientas },
+  { key: 'corte-caballero', src: imgCaballero },
+  { key: 'local', src: imgLocal },
+];
+
+// Lunes a domingo para la tabla de horario.
+const ordenDias = [1, 2, 3, 4, 5, 6, 0];
+const tramosTexto = (d: number) => horario[d].map(([a, b]) => `${a} – ${b}`).join(' · ');
+// Horario compacto para el pie: días seguidos con las mismas horas van juntos.
+const cap = (x: string) => x.charAt(0).toUpperCase() + x.slice(1);
+const horarioAgrupado: { dias: string; horas: string }[] = [];
+for (let i = 0; i < ordenDias.length; ) {
+  const d = ordenDias[i];
+  let j = i;
+  while (j + 1 < ordenDias.length && tramosTexto(ordenDias[j + 1]) === tramosTexto(d)) j++;
+  const dias = i === j ? cap(t.diasCortos[d]) : `${cap(t.diasCortos[d])} – ${cap(t.diasCortos[ordenDias[j]])}`;
+  horarioAgrupado.push({ dias, horas: horario[d].length ? tramosTexto(d) : t.visita.cerradoDia });
+  i = j + 1;
+}
+
+const cliente = {
+  lang,
+  horario,
+  servicios: servicios.map((s) => ({ id: s.id, min: s.min, nombre: t.servicios.nombres[s.id] })),
+  whatsapp: negocio.whatsapp,
+  negocio: { nombre: negocio.nombre, direccion: `${negocio.direccion.calle}, ${negocio.direccion.cp} ${negocio.direccion.ciudad}` },
+  t: {
+    dias: t.dias, diasCortos: t.diasCortos, meses: t.meses, hoy: t.hoy, manana: t.manana,
+    cita: t.cita, hero: t.hero,
+    visita: t.visita,
+  },
+};
+---
+<div id="app" data-cliente={JSON.stringify(cliente)}>
+  <a class="skip" href="#main">{t.skip}</a>
+
+  <header class="top" data-top>
+    <div class="top-in wrap">
+      <a class="brand" href={hrefFor(lang)} aria-label={negocio.nombre}>
+        <span class="brand-mark" aria-hidden="true">JG</span>
+        <span class="brand-name">Johny García</span>
+      </a>
+      <nav class="nav" aria-label="Menú">
+        <a href="#cita">{t.nav.cita}</a>
+        <a href="#servicios">{t.nav.servicios}</a>
+        <a href="#trabajos">{t.nav.trabajos}</a>
+        <a href="#visita">{t.nav.visita}</a>
+      </nav>
+      <div class="top-actions">
+        <a class="lang" href={hrefFor(other)} hreflang={other} lang={other} data-lang>
+          <span class="sr">{ui[other].nombreIdioma}</span><span aria-hidden="true">{other.toUpperCase()}</span>
+        </a>
+        <a class="btn btn-ghost btn-sm top-call" href={tel}><Icon name="phone" size={18} />{t.llamar}</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Portada: el letrero de neón del escaparate -->
+    <section class="hero" aria-labelledby="hero-title">
+      <Image class="hero-bg" src={imgLocal} alt="" widths={[640, 1024, 1600]} sizes="100vw" loading="eager" fetchpriority="high" />
+      <div class="hero-in wrap">
+        <h1 id="hero-title" class="sign">
+          <span class="tube tube-name" data-tube data-flick style="--d:0"><span>Johny</span> <span>García</span></span>
+          <span class="tube tube-barber" data-tube data-flick style="--d:1">{t.hero.barber}</span>
+          <span class="sr"> · Badalona</span>
+        </h1>
+        <p class="open-sign" data-open aria-live="polite">
+          <span class="open-word" data-open-word>{t.hero.abierto}</span>
+          <span class="open-detail" data-status></span>
+        </p>
+        <p class="lead">{t.hero.lema}</p>
+        <div class="hero-cta">
+          <a class="btn btn-neon" href="#cita"><Icon name="calendar" size={20} />{t.hero.cta}</a>
+          <a class="btn btn-ghost" href={wa} target="_blank" rel="noopener"><Icon name="chat" size={20} />{t.whatsapp}</a>
+        </div>
+        <a class="rating" href={negocio.mapsUrl} target="_blank" rel="noopener">
+          <span class="stars" aria-hidden="true">{[0, 1, 2, 3, 4].map(() => <Icon name="star" size={16} />)}</span>
+          <b>{v.nota}</b>
+          <span>{fill(t.hero.resenas, { n: v.resenas })}</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Reserva: cuatro tubos que se encienden según completas -->
+    <section id="cita" class="book" aria-labelledby="cita-title">
+      <div class="wrap book-in">
+        <div class="book-head">
+          <h2 id="cita-title">{t.cita.titulo}</h2>
+          <p>{agendaActiva ? t.cita.introAgenda : t.cita.intro}</p>
+        </div>
+
+        {agendaActiva && (
+          <div class="agenda" data-agenda={JSON.stringify(barberos.map((b) => ({ n: b.nombre, url: b.agenda, title: fill(t.cita.agendaTitulo, { n: b.nombre }) })))}>
+            {barberos.length > 1 && (
+              <fieldset class="station is-done">
+                <legend><span class="st-tube" aria-hidden="true"></span>{t.cita.barbero}</legend>
+                <div class="chips">
+                  {barberos.map((b, i) => (
+                    <label class="chip chip-slot"><input type="radio" name="barbero" value={i} checked={i === 0} /><span>{b.nombre}</span></label>
+                  ))}
+                </div>
+              </fieldset>
+            )}
+            <div class="agenda-frame">
+              <iframe data-agenda-frame src={barberos[0].agenda} title={fill(t.cita.agendaTitulo, { n: barberos[0].nombre })} loading="lazy"></iframe>
+            </div>
+            <p class="agenda-alt">
+              <a href={wa} target="_blank" rel="noopener"><Icon name="chat" size={16} />{t.cita.dudas}</a>
+              <a href={tel}><Icon name="phone" size={16} />{negocio.telefono}</a>
+            </p>
+          </div>
+        )}
+
+        {!agendaActiva && (
+        <form class="booking" data-reserva novalidate>
+          <fieldset class="station" data-station="servicio">
+            <legend><span class="st-tube" aria-hidden="true"></span>{t.cita.pasos.servicio}</legend>
+            <div class="services-pick">
+              {servicios.map((s, i) => (
+                <label class="svc">
+                  <input type="radio" name="servicio" value={s.id} />
+                  <span class="svc-body">
+                    <span class="svc-name">{t.servicios.nombres[s.id]}</span>
+                    <span class="svc-meta"><b>{s.precio} €</b> · {s.min} {t.cita.min}</span>
+                  </span>
+                </label>
+              ))}
+            </div>
+            <p class="err" data-err="servicio" role="alert"></p>
+          </fieldset>
+
+          <fieldset class="station" data-station="dia">
+            <legend><span class="st-tube" aria-hidden="true"></span>{t.cita.pasos.dia}</legend>
+            <div class="chips chips-days" data-days></div>
+            <p class="err" data-err="dia" role="alert"></p>
+          </fieldset>
+
+          <fieldset class="station" data-station="hora">
+            <legend><span class="st-tube" aria-hidden="true"></span>{t.cita.pasos.hora}</legend>
+            <div class="chips chips-slots" data-slots><p class="hint">{t.cita.eligeDia}</p></div>
+            <p class="hint small">{t.cita.comoFunciona}</p>
+            <p class="err" data-err="hora" role="alert"></p>
+          </fieldset>
+
+          <fieldset class="station" data-station="datos">
+            <legend><span class="st-tube" aria-hidden="true"></span>{t.cita.pasos.datos}</legend>
+            <p class="welcome" data-hola hidden><span data-hola-text></span> <button type="button" class="linkish" data-olvidar>{t.cita.noSoy}</button></p>
+            <div class="fields">
+              <label class="field">
+                <span>{t.cita.nombre}</span>
+                <input name="nombre" type="text" autocomplete="given-name" required maxlength="40" />
+                <span class="err" data-err="nombre" role="alert"></span>
+              </label>
+              <label class="field">
+                <span>{t.cita.tel}</span>
+                <input name="tel" type="tel" inputmode="tel" autocomplete="tel" required maxlength="16" placeholder="600 000 000" />
+                <span class="err" data-err="tel" role="alert"></span>
+              </label>
+              <label class="field field-wide">
+                <span>{t.cita.nota}</span>
+                <input name="nota" type="text" maxlength="120" placeholder={t.cita.notaPh} />
+              </label>
+            </div>
+            <label class="check"><input type="checkbox" name="recordar" checked /> <span>{t.cita.recordar}</span></label>
+          </fieldset>
+
+          <div class="ticket" data-ticket>
+            <p class="summary is-empty" data-summary aria-live="polite">{t.cita.resumenVacio}</p>
+            <button class="btn btn-neon btn-wide" type="submit"><Icon name="chat" size={20} />{t.cita.enviar}</button>
+            <a class="call-alt" href={tel}><Icon name="phone" size={16} />{t.cita.llamarMejor} {negocio.telefono}</a>
+          </div>
+
+          <div class="done" data-ok hidden tabindex="-1">
+            <p class="done-title"><Icon name="check" size={22} />{t.cita.okTitulo}</p>
+            <p>{t.cita.okTexto}</p>
+            <p class="done-summary" data-ok-summary></p>
+            <div class="done-actions">
+              <button type="button" class="btn btn-neon" data-ics><Icon name="calendar" size={18} />{t.cita.calendario}</button>
+              <a class="btn btn-ghost" data-reopen href={wa} target="_blank" rel="noopener"><Icon name="chat" size={18} />{t.cita.abrirDeNuevo}</a>
+              <button type="button" class="linkish" data-reset>{t.cita.otra}</button>
+            </div>
+          </div>
+        </form>
+        )}
+      </div>
+    </section>
+
+    <!-- Precios: la carta del escaparate -->
+    <section id="servicios" class="prices" aria-labelledby="precios-title">
+      <div class="wrap prices-in">
+        <div class="prices-head">
+          <h2 id="precios-title">{t.servicios.titulo}</h2>
+          <p>{t.servicios.intro}</p>
+          <p class="note">{t.servicios.ejemplo}</p>
+        </div>
+        <ul class="menu">
+          {servicios.map((s) => (
+            <li>
+              <a class="menu-row" href="#cita" data-pick={s.id}>
+                <span class="menu-name">{t.servicios.nombres[s.id]}<small>{t.servicios.detalles[s.id]}</small></span>
+                <span class="menu-dots" aria-hidden="true"></span>
+                <span class="menu-price">{s.precio}<small>€</small></span>
+                <span class="menu-go"><span class="sr">{t.servicios.reservar}: </span><Icon name="arrow" size={20} /></span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <!-- Trabajos: la cinta transportadora -->
+    <section id="trabajos" class="works" aria-labelledby="trabajos-title" data-textos={JSON.stringify({ pausar: t.trabajos.pausar, seguir: t.trabajos.seguir })}>
+      <div class="wrap works-head">
+        <h2 id="trabajos-title">{t.trabajos.titulo}</h2>
+        <p class="note">{t.trabajos.intro}</p>
+        <button type="button" class="belt-toggle" data-belt-toggle aria-pressed="false">
+          <span data-belt-label>{t.trabajos.pausar}</span>
+        </button>
+      </div>
+
+      <div class="belt" data-belt>
+        <!-- Útiles de barbero junto a la cinta -->
+        <svg class="prop prop-tijera" viewBox="0 0 160 90" aria-hidden="true">
+          <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path class="metal" d="M62 47 152 20c3-1 4 3 1 4L70 53" />
+            <path class="metal" d="M62 43 150 66c3 1 2 5-1 4L68 52" />
+            <circle class="pin" cx="66" cy="48" r="3.2" />
+            <path class="grip" d="M58 41c-6-9-20-14-31-9-10 5-11 17-2 21 9 5 25 0 33-8" />
+            <path class="grip" d="M58 55c-6 9-20 14-31 9-10-5-11-17-2-21" />
+            <path class="grip" d="M25 64c9 5 25 0 33-8" />
+          </g>
+        </svg>
+        <svg class="prop prop-polvos" viewBox="0 0 120 150" aria-hidden="true">
+          <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <rect class="cap" x="38" y="14" width="44" height="18" rx="5" />
+            <path class="cap" d="M46 20h4m6 0h4m6 0h4" />
+            <path class="body" d="M36 32h48l4 10v70a10 10 0 0 1-10 10H42a10 10 0 0 1-10-10V42Z" />
+            <path class="label" d="M40 64h40v30H40z" />
+            <text class="label-t" x="60" y="83" text-anchor="middle">POLVOS</text>
+          </g>
+          <g class="dust">
+            <circle cx="22" cy="132" r="1.6" /><circle cx="12" cy="140" r="1.1" /><circle cx="30" cy="142" r="1.3" />
+            <circle cx="96" cy="136" r="1.4" /><circle cx="106" cy="142" r="1" /><circle cx="8" cy="128" r="0.9" />
+            <circle cx="18" cy="146" r="0.8" /><circle cx="112" cy="132" r="0.9" />
+          </g>
+        </svg>
+        <svg class="prop prop-cera" viewBox="0 0 150 110" aria-hidden="true">
+          <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <ellipse class="lid" cx="96" cy="38" rx="40" ry="11" transform="rotate(-14 96 38)" />
+            <path class="lid" d="M56 47c1 6 12 13 30 13 12 0 22-4 28-9" transform="rotate(-14 96 38)" />
+            <path class="body" d="M12 62v26c0 7 15 13 34 13s34-6 34-13V62" />
+            <ellipse class="body" cx="46" cy="62" rx="34" ry="11" />
+            <ellipse class="wax" cx="46" cy="62" rx="27" ry="7" />
+            <path class="wax" d="M36 61c5-3 13-3 18 1" />
+            <text class="label-t" x="46" y="90" text-anchor="middle">CERA</text>
+          </g>
+        </svg>
+
+        <span class="roller roller-l" aria-hidden="true"></span>
+        <span class="roller roller-r" aria-hidden="true"></span>
+
+        <div class="belt-surface">
+          <div class="belt-track" data-belt-track>
+            {[0, 1].map((copia) => (
+              <ul class="belt-set" aria-hidden={copia === 1 ? 'true' : undefined} aria-label={copia === 0 ? t.trabajos.titulo : undefined}>
+                {galeria.map((g, i) => (
+                  <li class={`item item-${i % 4}`}>
+                    <figure class="card">
+                      <Image src={g.src} alt={copia === 0 ? t.trabajos.alts[g.key] : ''} widths={[360, 560]} sizes="(min-width: 900px) 280px, 200px" loading="lazy" />
+                      {g.video && (
+                        <video data-video src={g.video} muted loop playsinline preload="none" aria-hidden="true"></video>
+                      )}
+                    </figure>
+                  </li>
+                ))}
+              </ul>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Preguntas que hoy le hacen por teléfono -->
+    <section class="faq" aria-labelledby="faq-title">
+      <div class="wrap faq-in">
+        <h2 id="faq-title">{t.faq.titulo}</h2>
+        <div class="faq-list">
+          {t.faq.items.map((it) => (
+            <details>
+              <summary>{it.q}</summary>
+              <p>{it.a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Visita -->
+    <section id="visita" class="visit" aria-labelledby="visita-title">
+      <div class="wrap visit-in">
+        <div class="visit-info">
+          <h2 id="visita-title">{t.visita.titulo}</h2>
+          <p class="status-line" data-status></p>
+          <table class="hours">
+            <caption class="sr">{t.visita.horario}</caption>
+            <tbody>
+              {ordenDias.map((d) => (
+                <tr data-day={d}>
+                  <th scope="row">{t.dias[d]}<span class="today-tag">{t.visita.hoy}</span></th>
+                  <td>{horario[d].length ? tramosTexto(d) : t.visita.cerradoDia}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {!horarioConfirmado && <p class="note">{t.visita.ejemplo}</p>}
+          <address class="addr">
+            <Icon name="pin" />
+            <span>{negocio.direccion.calle}<br />{negocio.direccion.cp} {negocio.direccion.ciudad}</span>
+          </address>
+          <p class="addr"><Icon name="card" /><span>{t.visita.pago}</span></p>
+          <div class="visit-cta">
+            <a class="btn btn-neon" href={negocio.mapsUrl} target="_blank" rel="noopener"><Icon name="route" size={20} />{t.visita.comoLlegar}</a>
+            <a class="btn btn-ghost" href={negocio.mapsUrl} target="_blank" rel="noopener"><Icon name="star" size={18} />{t.visita.verResenas}</a>
+          </div>
+        </div>
+        <div class="map">
+          <iframe title={t.visita.mapaTitulo} src={negocio.mapsEmbed} loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <!-- Cierre: el letrero otra vez, reflejado en la acera mojada -->
+    <div class="foot-street">
+      <div class="wrap street-in">
+        <div class="street-sign" aria-hidden="true" data-flick>
+          <p class="tube street-name">Johny García</p>
+          <div class="puddle"><p class="tube street-name street-reflect">Johny García</p></div>
+          <svg class="sr" width="0" height="0" focusable="false">
+            <filter id="agua" x="-20%" y="-30%" width="140%" height="160%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.002 0.045" numOctaves="1" seed="4" result="ondas">
+                <animate data-ondas attributeName="baseFrequency" dur="7s" values="0.002 0.045;0.002 0.055;0.002 0.045" repeatCount="indefinite" />
+              </feTurbulence>
+              <feDisplacementMap in="SourceGraphic" in2="ondas" scale="5" xChannelSelector="R" yChannelSelector="G" />
+              <feGaussianBlur stdDeviation="1.7" />
+            </filter>
+          </svg>
+        </div>
+        <div class="street-cta">
+          <p class="street-q">{t.pie.cta}</p>
+          <p class="street-sub">{t.pie.ctaSub}</p>
+          <div class="hero-cta">
+            <a class="btn btn-neon" href="#cita"><Icon name="calendar" size={20} />{t.pedirCita}</a>
+            <a class="btn btn-ghost" href={wa} target="_blank" rel="noopener"><Icon name="chat" size={20} />{t.whatsapp}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wrap foot-grid">
+      <div class="foot-col">
+        <h2 class="foot-h">{t.pie.donde}</h2>
+        <address>{negocio.direccion.calle}<br />{negocio.direccion.cp} {negocio.direccion.ciudad}</address>
+        <a class="foot-link" href={negocio.mapsUrl} target="_blank" rel="noopener"><Icon name="route" size={16} />{t.visita.comoLlegar}</a>
+      </div>
+      <div class="foot-col">
+        <h2 class="foot-h">{t.pie.contacto}</h2>
+        <a class="foot-link" href={tel}><Icon name="phone" size={16} />{negocio.telefono}</a>
+        <a class="foot-link" href={wa} target="_blank" rel="noopener"><Icon name="chat" size={16} />{t.whatsapp}</a>
+        <span class="foot-link"><Icon name="card" size={16} />{t.visita.pago}</span>
+      </div>
+      <div class="foot-col">
+        <h2 class="foot-h">{t.pie.horario}</h2>
+        <p class="foot-status" data-status></p>
+        <dl class="foot-hours">
+          {horarioAgrupado.map((g) => (<><dt>{g.dias}</dt><dd>{g.horas}</dd></>))}
+        </dl>
+      </div>
+      <nav class="foot-col" aria-label={t.pie.menu}>
+        <h2 class="foot-h">{t.pie.menu}</h2>
+        <a class="foot-link" href="#cita">{t.nav.cita}</a>
+        <a class="foot-link" href="#servicios">{t.nav.servicios}</a>
+        <a class="foot-link" href="#trabajos">{t.nav.trabajos}</a>
+        <a class="foot-link" href="#visita">{t.nav.visita}</a>
+      </nav>
+    </div>
+
+    <div class="wrap foot-bar">
+      <p>© {new Date().getFullYear()} {negocio.nombre} · {t.pie.hecho}</p>
+      <div class="foot-bar-r">
+        <a href={hrefFor(other)} hreflang={other} lang={other} data-lang>{ui[other].nombreIdioma}</a>
+        <a href="#main" class="foot-top">{t.pie.arriba}<Icon name="arrow" size={16} class="up" /></a>
+      </div>
+    </div>
+  </footer>
+
+  <nav class="dock" aria-label={t.pedirCita}>
+    <a href={tel}><Icon name="phone" size={20} /><span>{t.llamar}</span></a>
+    <a href={wa} target="_blank" rel="noopener"><Icon name="chat" size={20} /><span>{t.whatsapp}</span></a>
+    <a class="dock-main" href="#cita"><Icon name="calendar" size={20} /><span>{t.pedirCita}</span></a>
+  </nav>
+</div>
+
+<script>
+  import { init } from '../scripts/app';
+  init();
+</script>

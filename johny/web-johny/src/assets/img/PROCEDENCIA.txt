@@ -1,0 +1,8 @@
+Fotografías de MUESTRA (sustituir por fotos reales de la barbería, mismo nombre de archivo).
+Origen: Unsplash (licencia Unsplash, uso libre), descargadas el 2026-10-28.
+local.jpg            https://images.unsplash.com/photo-1585747860715-2ba37e788b70
+corte-tijera.jpg     https://images.unsplash.com/photo-1622287162716-f311baa1a2b8
+barba-tijera.jpg     https://images.unsplash.com/photo-1503951914875-452162b0f3f1
+herramientas.jpg     https://images.unsplash.com/photo-1621605815971-fbc98d665033
+degradado-perfil.jpg https://images.unsplash.com/photo-1599351431202-1e0f0137899a
+corte-caballero.jpg  https://images.unsplash.com/photo-1622286342621-4bd786c2447c

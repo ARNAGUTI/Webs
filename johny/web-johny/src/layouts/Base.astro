@@ -1,0 +1,80 @@
+---
+import '@fontsource/tilt-neon/400';
+import '@fontsource-variable/big-shoulders-display/wght';
+import '@fontsource-variable/instrument-sans/wght';
+import '../styles/global.css';
+import { ui, type Lang } from '../i18n/ui';
+import { negocio, horario } from '../data/negocio';
+import ogImage from '../assets/img/local.jpg';
+import { getImage } from 'astro:assets';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = ui[lang];
+const site = Astro.site!;
+const urlEs = new URL('/', site).href;
+const urlCa = new URL('/ca/', site).href;
+const canonical = lang === 'es' ? urlEs : urlCa;
+const og = await getImage({ src: ogImage, width: 1200, height: 630, format: 'jpg' });
+
+const diasSchema = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const openingHoursSpecification = Object.entries(horario).flatMap(([d, tramos]) =>
+  tramos.map(([opens, closes]) => ({
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: `https://schema.org/${diasSchema[Number(d)]}`,
+    opens,
+    closes,
+  })),
+);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BarberShop',
+  '@id': `${urlEs}#negocio`,
+  name: negocio.nombre,
+  url: canonical,
+  telephone: negocio.telefonoE164,
+  image: new URL(og.src, site).href,
+  priceRange: '€',
+  paymentAccepted: 'Cash, Credit Card',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: negocio.direccion.calle,
+    postalCode: negocio.direccion.cp,
+    addressLocality: negocio.direccion.ciudad,
+    addressRegion: negocio.direccion.provincia,
+    addressCountry: negocio.direccion.pais,
+  },
+  hasMap: negocio.mapsUrl,
+  areaServed: 'Badalona',
+  openingHoursSpecification,
+  inLanguage: t.htmlLang,
+};
+---
+<!doctype html>
+<html lang={t.htmlLang}>
+  <head>
+    <meta charset="utf-8" />
+    <script is:inline>document.documentElement.classList.add("js")</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{t.meta.title}</title>
+    <meta name="description" content={t.meta.description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="es" href={urlEs} />
+    <link rel="alternate" hreflang="ca" href={urlCa} />
+    <link rel="alternate" hreflang="x-default" href={urlEs} />
+    <meta name="theme-color" content="#0b0d14" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content={lang === 'es' ? 'es_ES' : 'ca_ES'} />
+    <meta property="og:title" content={t.meta.title} />
+    <meta property="og:description" content={t.meta.description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL(og.src, site).href} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
