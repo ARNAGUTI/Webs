@@ -1,5 +1,5 @@
 ---
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
 import Icon from './Icon.astro';
 import Logo from './Logo.astro';
 import { ui, type Lang } from '../i18n/ui';
@@ -49,6 +49,25 @@ for (let i = 0; i < ordenDias.length; ) {
   }
   i = j + 1;
 }
+
+// Productos INSIGHT de su estantería: cada carta es un recorte de la foto (1600 × 1197) centrado en un bote.
+const estanteria = await getImage({ src: imgProductos, width: 1600, format: 'webp' });
+const productos = [
+  { id: 'damaged-hair', caja: [1380, 575, 300] },
+  { id: 'dry-hair', caja: [1215, 575, 300] },
+  { id: 'anti-frizz', caja: [1040, 575, 300] },
+  { id: 'volumizing', caja: [745, 575, 300] },
+  { id: 'loss-control', caja: [885, 575, 300] },
+  { id: 'anti-dandruff', caja: [295, 575, 300] },
+  { id: 'rebalancing', caja: [445, 575, 300] },
+  { id: 'post-chemistry', caja: [595, 575, 300] },
+  { id: 'incolor', caja: [1215, 110, 235] },
+] as const;
+// caja = [centro x, arriba y, alto]; la carta es 3:4, así que el ancho es 3/4 del alto.
+const recorte = ([cx, y, h]: readonly number[]) => {
+  const W = 1600, H = 1197, w = h * 0.75, x = Math.max(0, Math.min(W - w, cx - w / 2));
+  return `background-image:url(${estanteria.src});background-size:${(W / w) * 100}% auto;background-position:${(x / (W - w)) * 100}% ${(y / (H - h)) * 100}%`;
+};
 
 const estaciones = ['destino', 'pelo', 'largo', 'hora', 'datos'] as const;
 
@@ -133,6 +152,32 @@ const cliente = {
         <ul class="claves" role="list">
           {t.patri.claves.map((c) => (<li><h3>{c.t}</h3><p>{c.d}</p></li>))}
         </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Servicios -->
+  <section class="servicios" id="servicios">
+    <div class="wrap">
+      <h2 class="h2">{t.lineas.titulo}</h2>
+      <p class="intro">{t.lineas.intro}</p>
+      <div class="carta">
+        {lineas.map((l) => (
+          <div class="carta-grupo">
+            <h3>{t.lineas.nombres[l.id]}</h3>
+            <ul role="list">
+              {servicios.filter((s) => s.linea === l.id).map((s) => (
+                <li>
+                  <a href="#cita" data-pick={s.id}>
+                    <span class="c-name">{t.servicios.nombres[s.id]}<small>{fill(t.lineas.min, { m: s.min })}</small></span>
+                    <span class="c-dots" aria-hidden="true"></span>
+                    <span class="c-price">{precio(s.desde)}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
       </div>
     </div>
   </section>
@@ -285,44 +330,23 @@ const cliente = {
     </div>
   </section>
 
-  <!-- Servicios -->
-  <section class="servicios" id="servicios">
-    <div class="wrap">
-      <h2 class="h2">{t.lineas.titulo}</h2>
-      <p class="intro">{t.lineas.intro}</p>
-      <div class="carta">
-        {lineas.map((l) => (
-          <div class="carta-grupo">
-            <h3>{t.lineas.nombres[l.id]}</h3>
-            <ul role="list">
-              {servicios.filter((s) => s.linea === l.id).map((s) => (
-                <li>
-                  <a href="#cita" data-pick={s.id}>
-                    <span class="c-name">{t.servicios.nombres[s.id]}<small>{fill(t.lineas.min, { m: s.min })}</small></span>
-                    <span class="c-dots" aria-hidden="true"></span>
-                    <span class="c-price">{precio(s.desde)}</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
-
   <!-- Trabajos reales -->
   <section class="trabajos" id="trabajos">
     <div class="wrap">
       <h2 class="h2">{t.trabajos.titulo}</h2>
       <p class="intro">{t.trabajos.intro}</p>
-      <ul class="galeria" role="list">
-        {trabajos.map((g, i) => (
-          <li class={`g g${i + 1}`}>
-            <Image src={g.src} alt={t.trabajos.alts[g.key]} widths={[360, 540, 720, 960]} sizes={i === 0 ? '(max-width: 860px) 100vw, 40vw' : '(max-width: 860px) 50vw, 28vw'} style={`object-position:${g.pos}`} />
+    </div>
+    <div class="cinta" data-belt>
+      <ul class="cinta-pista" role="list" data-belt-track>
+        {[...trabajos, ...trabajos].map((g, i) => (
+          <li class={`cinta-foto f-${g.key}`} aria-hidden={i >= trabajos.length ? 'true' : undefined}>
+            <Image src={g.src} alt={i >= trabajos.length ? '' : t.trabajos.alts[g.key]} widths={[360, 540, 720]} sizes="(max-width: 860px) 62vw, 340px" style={`object-position:${g.pos}`} />
           </li>
         ))}
       </ul>
+    </div>
+    <div class="wrap cinta-ctrl">
+      <button type="button" class="btn btn-line-dark btn-sm" data-belt-toggle aria-pressed="false" data-pausar={t.trabajos.pausar} data-seguir={t.trabajos.seguir}><span data-belt-label>{t.trabajos.pausar}</span></button>
     </div>
   </section>
 
@@ -333,9 +357,26 @@ const cliente = {
         <h2 class="h2">{t.productos.titulo}</h2>
         <p class="lead">{t.productos.texto}</p>
       </div>
-      <figure class="marco">
-        <Image src={imgProductos} alt={t.productos.foto} widths={[480, 720, 960]} sizes="(max-width: 860px) 90vw, 46vw" />
-      </figure>
+      <div class="taco" data-taco>
+        <ul class="taco-cartas" role="list" aria-live="polite">
+          <li class="carta-prod">
+            <div class="prod-foto"><Image src={imgProductos} alt={t.productos.foto} widths={[480, 720, 960]} sizes="(max-width: 860px) 86vw, 40vw" /></div>
+            <p class="prod-nombre">{t.productos.taco.estanteria}<small>{t.productos.taco.estanteriaUso}</small></p>
+          </li>
+          {productos.map((pr) => (
+            <li class="carta-prod">
+              <div class="prod-foto prod-recorte" role="img" aria-label={`INSIGHT ${t.productos.items[pr.id][0]}`} style={recorte(pr.caja)}></div>
+              <p class="prod-nombre"><span class="prod-marca">Insight</span>{t.productos.items[pr.id][0]}<small>{t.productos.items[pr.id][1]}</small></p>
+            </li>
+          ))}
+        </ul>
+        <div class="taco-ctrl">
+          <button type="button" class="taco-btn" data-taco-prev aria-label={t.productos.taco.prev}><Icon name="arrow" size={20} class="flip" /></button>
+          <span class="taco-cuenta" data-taco-cuenta></span>
+          <button type="button" class="taco-btn" data-taco-next aria-label={t.productos.taco.next}><Icon name="arrow" size={20} /></button>
+        </div>
+        <p class="taco-pista">{t.productos.taco.pista}</p>
+      </div>
     </div>
   </section>
 
@@ -395,9 +436,49 @@ const cliente = {
 </main>
 
 <footer class="pie">
-  <div class="pie-rotulo"><Logo /></div>
-  <div class="wrap pie-in">
-    <p>{negocio.direccion.calle}, {negocio.direccion.cp} {negocio.direccion.ciudad} · <a href={tel}>{negocio.telefono}</a></p>
+  <div class="pie-cta">
+    <div class="wrap pie-cta-in">
+      <div>
+        <p class="pie-cta-t">{t.pie.cta}</p>
+        <p class="pie-cta-p">{t.pie.ctaTexto}</p>
+      </div>
+      <a class="btn btn-rose" href="#cita"><Icon name="calendar" size={20} />{t.nav.cita}</a>
+    </div>
+  </div>
+  <div class="wrap pie-grid">
+    <div class="pie-marca">
+      <Logo />
+      <p>{t.pie.lema}</p>
+      <a class="pie-rating" href={negocio.mapsUrl} target="_blank" rel="noopener"><span class="stars" aria-hidden="true">{[1, 2, 3, 4, 5].map(() => <Icon name="star" size={14} />)}</span>{v.nota} · {fill(t.hero.resenas, { n: v.resenas })} Google</a>
+    </div>
+    <div>
+      <p class="pie-t">{t.pie.contacto}</p>
+      <ul class="pie-lista" role="list">
+        <li><Icon name="pin" size={16} /><a href={negocio.mapsUrl} target="_blank" rel="noopener">{negocio.direccion.calle}<br />{negocio.direccion.cp} {negocio.direccion.ciudad}</a></li>
+        <li><Icon name="phone" size={16} /><a href={tel}>{negocio.telefono}</a></li>
+        <li><Icon name="metro" size={16} />{t.visita.metro}</li>
+      </ul>
+    </div>
+    <div>
+      <p class="pie-t">{t.pie.horario}</p>
+      <dl class="pie-horario">
+        {horarioPuerta.map((h) => (<div><dt>{h.dias}</dt><dd>{h.horas}</dd></div>))}
+        <div><dt>{cap(t.diasCortos[0])}, {t.diasCortos[1]}</dt><dd>{t.visita.cerradoDia}</dd></div>
+      </dl>
+    </div>
+    <div>
+      <p class="pie-t">{t.pie.web}</p>
+      <ul class="pie-lista pie-links" role="list">
+        <li><a href="#patri">{t.nav.patri}</a></li>
+        <li><a href="#servicios">{t.nav.servicios}</a></li>
+        <li><a href="#cita">{t.nav.cita}</a></li>
+        <li><a href="#trabajos">{t.nav.trabajos}</a></li>
+        <li><a href="#visita">{t.nav.visita}</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap pie-base">
+    <p>© {new Date().getFullYear()} {negocio.nombre}. {t.pie.derechos}</p>
     <p><a href={lang === 'es' ? '/legal/' : '/ca/legal/'}>{t.pie.legal}</a> · <a href={hrefFor(other)} hreflang={other} lang={other} data-lang>{other === 'ca' ? 'Català' : 'Español'}</a></p>
   </div>
 </footer>

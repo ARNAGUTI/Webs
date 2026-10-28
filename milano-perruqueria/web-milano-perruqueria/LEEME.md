@@ -34,7 +34,7 @@ Al enviar se abre WhatsApp con todo escrito:
 > Te mando foto de referencia.
 > Mi móvil: 612345678.
 
-Además: si la clienta lo deja a medias, al volver se encuentra su cita como la dejó; botón "Añadir a mi calendario" con aviso 3 h antes; mapa que solo se carga al pulsar (sin cookies de Google antes); preguntas típicas de teléfono respondidas.
+Si falta algo por marcar, el aviso rosa tiembla cada vez que se pulsa Siguiente. Además: si la clienta lo deja a medias, al volver se encuentra su cita como la dejó; botón "Añadir a mi calendario" con aviso 3 h antes; mapa que solo se carga al pulsar (sin cookies de Google antes); preguntas típicas de teléfono respondidas.
 
 Límite honesto: la web no sabe qué horas tiene ya ocupadas; el salón confirma o propone otra. Si más adelante quiere agenda con huecos reales, se puede conectar Google Calendar como en la web de Johny García Barber.
 
@@ -51,7 +51,7 @@ Todo está en `src/data/negocio.ts`:
 - **Horario**: el del cartel de su puerta (mar–vie 9:30–19:30, sáb 9–14). Google y Fresha dicen 10–19.
 - **Servicios y precios**: los precios son de ejemplo ("desde").
 - **Fotos**: son las de su ficha de Google Maps (fachada, interior, Patri, trabajos, productos), ver `src/assets/img/PROCEDENCIA.txt`. Confirmar que se pueden usar; si quiere otras, se cambian con el mismo nombre.
-- **Productos**: la web dice que trabaja con INSIGHT (se ve en su estantería). Confirmar.
+- **Productos**: el taco de productos muestra los 9 INSIGHT que se ven en su estantería (cada carta es un recorte de `productos.jpg`; la lista y los recortes están al principio de `src/components/Home.astro`, en `productos`). Confirmar qué vende y, si tiene fotos de cada producto, se cambian por ellas.
 - **Instagram**: una de sus fotos viene de Instagram; si tiene cuenta, se añade el enlace.
 - **Aviso legal**: titular, NIF y email en `src/components/Legal.astro` (marcados con [ ]).
 - **Dominio**: `astro.config.mjs` (ahora milanoperruqueria.com, provisional).

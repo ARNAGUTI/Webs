@@ -116,6 +116,8 @@ export function init() {
     mapbox.classList.add('is-loaded');
   });
 
+  initCinta();
+  initTaco();
   initRuta(c, now, tramosDe, SLOT);
 }
 
@@ -269,6 +271,16 @@ function initRuta(c: Cliente, now: ReturnType<typeof nowMadrid>, tramosDe: (d: D
     });
   }
 
+  // El aviso tiembla cada vez que se intenta seguir sin completar: así se lee.
+  function sacudir(k: string) {
+    const el = $(`[data-err="${k}"]`, form);
+    if (!el || !el.textContent) return;
+    el.classList.remove('is-shake');
+    void el.offsetWidth;
+    el.classList.add('is-shake');
+    const r = el.getBoundingClientRect();
+    if (r.bottom > innerHeight - 90 || r.top < 120) el.scrollIntoView({ behavior: reduced() ? 'auto' : 'smooth', block: 'center' });
+  }
   function setErr(k: string, msg: string) {
     const el = $(`[data-err="${k}"]`, form);
     if (el) el.textContent = msg;
@@ -388,7 +400,7 @@ function initRuta(c: Cliente, now: ReturnType<typeof nowMadrid>, tramosDe: (d: D
   }
   function siguiente() {
     const e = errorDelPaso(actual);
-    if (e) { setErr(e[0], e[1]); return; }
+    if (e) { setErr(e[0], e[1]); sacudir(e[0]); return; }
     mostrar(salto(actual, 1));
   }
   btnSig.addEventListener('click', siguiente);
@@ -446,6 +458,7 @@ function initRuta(c: Cliente, now: ReturnType<typeof nowMadrid>, tramosDe: (d: D
       const k = pasos.findIndex((p) => station?.getAttribute('data-station') === p);
       if (k >= 0) mostrar(k);
       target?.focus({ preventScroll: true });
+      sacudir(first);
       return;
     }
     guardar(CLIENTE, campo('recordar').checked ? { n, tel } : null);
@@ -546,4 +559,51 @@ function initRuta(c: Cliente, now: ReturnType<typeof nowMadrid>, tramosDe: (d: D
   }
   actualizar();
   mostrar(inicio, false);
+}
+
+// ---------- Cinta de trabajos: las fotos pasan solas ----------
+function initCinta() {
+  const belt = $('[data-belt]');
+  const track = $('[data-belt-track]');
+  if (!belt || !track) return;
+  // 45 px por segundo, sea cual sea el ancho de la cinta.
+  const ajustar = () => track.style.setProperty('--dur', `${track.scrollWidth / 2 / 45}s`);
+  ajustar();
+  window.addEventListener('resize', ajustar, { passive: true });
+  $$('img', track).forEach((img) => img.addEventListener('load', ajustar, { once: true }));
+  const btn = $<HTMLButtonElement>('[data-belt-toggle]');
+  const label = $('[data-belt-label]');
+  btn?.addEventListener('click', () => {
+    const parada = belt.classList.toggle('is-paused');
+    btn.setAttribute('aria-pressed', String(parada));
+    if (label) label.textContent = parada ? btn.dataset.seguir! : btn.dataset.pausar!;
+  });
+}
+
+// ---------- Taco de productos: la de arriba se va al fondo ----------
+function initTaco() {
+  const taco = $('[data-taco]');
+  if (!taco) return;
+  const cartas = $$('.carta-prod', taco);
+  const cuenta = $('[data-taco-cuenta]', taco)!;
+  let i = 0;
+  const pintar = () => {
+    cartas.forEach((c, k) => {
+      const pos = (k - i + cartas.length) % cartas.length;
+      c.dataset.pos = String(Math.min(pos, 3));
+      c.setAttribute('aria-hidden', pos === 0 ? 'false' : 'true');
+    });
+    cuenta.textContent = `${i + 1} / ${cartas.length}`;
+  };
+  const mover = (d: number) => { i = (i + d + cartas.length) % cartas.length; pintar(); };
+  $('[data-taco-next]', taco)?.addEventListener('click', () => mover(1));
+  $('[data-taco-prev]', taco)?.addEventListener('click', () => mover(-1));
+  // Pulsar la carta de arriba también pasa a la siguiente.
+  $('.taco-cartas', taco)?.addEventListener('click', () => mover(1));
+  // Deslizar con el dedo.
+  let x0 = 0;
+  taco.addEventListener('touchstart', (e) => { x0 = e.touches[0].clientX; }, { passive: true });
+  taco.addEventListener('touchend', (e) => { const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 40) mover(dx < 0 ? 1 : -1); });
+  taco.addEventListener('keydown', (e) => { if (e.key === 'ArrowRight') mover(1); if (e.key === 'ArrowLeft') mover(-1); });
+  pintar();
 }

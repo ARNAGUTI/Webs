@@ -356,6 +356,15 @@ section { position: relative; }
 .field input[aria-invalid='true'] { border-color: var(--rosa-hondo); }
 .err { color: var(--rosa-hondo); font-weight: 650; font-size: 0.9rem; font-style: normal; }
 .err:empty { display: none; }
+p.err { display: inline-flex; align-items: center; gap: 8px; background: var(--rosa-velo); padding: 8px 14px; border-radius: 999px; }
+p.err::before { content: '!'; display: grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; background: var(--rosa); color: #fff; font-size: 0.75rem; font-weight: 800; }
+.err.is-shake { animation: tiembla 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both; }
+@keyframes tiembla {
+  10%, 90% { transform: translateX(-2px); }
+  20%, 80% { transform: translateX(4px); }
+  30%, 50%, 70% { transform: translateX(-7px); }
+  40%, 60% { transform: translateX(7px); }
+}
 p.err { margin-top: 10px; }
 .hola { margin-bottom: 14px; font-weight: 600; }
 
@@ -416,24 +425,56 @@ p.err { margin-top: 10px; }
 
 /* ---------- Trabajos ---------- */
 .trabajos { padding-block: clamp(72px, 11vw, 128px); background: var(--blanco); }
-.galeria {
-  list-style: none; margin: clamp(32px, 5vw, 48px) 0 0; padding: 0;
-  display: grid; grid-template-columns: 1.3fr 1fr 1fr; grid-template-rows: repeat(2, minmax(220px, 300px)); gap: clamp(10px, 1.4vw, 18px);
-}
-.galeria .g { overflow: hidden; background: var(--pared); position: relative; }
-.galeria .g::after { content: ''; position: absolute; inset: 6px; border: 1px solid rgb(217 182 108 / 0.7); pointer-events: none; }
-.galeria img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s var(--ease-out); }
-.galeria .g:hover img { transform: scale(1.04); }
-.g1 { grid-row: 1 / span 2; }
-@media (max-width: 860px) {
-  .galeria { grid-template-columns: 1fr 1fr; grid-template-rows: none; grid-auto-rows: 220px; }
-  .g1 { grid-column: 1 / -1; grid-row: auto; height: 420px; }
-}
+/* La cinta: las fotos de trabajos pasan solas, como en un escaparate giratorio. */
+.cinta { margin-top: clamp(32px, 5vw, 48px); overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
+.cinta-pista { list-style: none; margin: 0; padding: 6px 0; display: flex; gap: clamp(12px, 1.6vw, 20px); width: max-content; animation: cinta var(--dur, 60s) linear infinite; }
+.cinta:hover .cinta-pista, .cinta.is-paused .cinta-pista { animation-play-state: paused; }
+@keyframes cinta { to { transform: translateX(calc(-50% - clamp(6px, 0.8vw, 10px))); } }
+.cinta-foto { flex: none; width: clamp(220px, 26vw, 340px); aspect-ratio: 4 / 5; overflow: hidden; position: relative; background: var(--pared); }
+.cinta-foto::after { content: ''; position: absolute; inset: 7px; border: 1px solid rgb(217 182 108 / 0.75); pointer-events: none; }
+.cinta-foto img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s var(--ease-out); }
+.cinta-foto:hover img { transform: scale(1.05); }
+/* La foto del balayage trae un icono de Instagram abajo a la izquierda: queda fuera del encuadre. */
+.cinta-foto.f-balayage img { transform: scale(1.16); transform-origin: 75% 10%; }
+.cinta-foto.f-balayage:hover img { transform: scale(1.2); }
+.cinta-ctrl { margin-top: 18px; display: flex; justify-content: flex-end; }
+@media (prefers-reduced-motion: reduce) { .cinta { overflow-x: auto; } .cinta-pista { animation: none; } .cinta-ctrl { display: none; } }
 
 /* ---------- Productos ---------- */
 .productos { padding-block: clamp(72px, 11vw, 128px); background: var(--roble-velo); }
-.productos-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: clamp(32px, 6vw, 88px); align-items: center; }
-.productos .marco img { aspect-ratio: 4 / 3; }
+.productos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 6vw, 88px); align-items: center; }
+/* El taco de fotos: la de arriba se ve entera; al pasar el ratón se abren las de debajo. */
+.taco { position: relative; display: grid; justify-items: center; gap: 18px; outline: none; }
+.taco-cartas { list-style: none; margin: 0; padding: 0; position: relative; width: min(100%, 380px); aspect-ratio: 3 / 4.2; cursor: pointer; }
+.carta-prod {
+  position: absolute; inset: 0; background: var(--blanco); padding: 10px 10px 0; display: grid; grid-template-rows: 1fr auto;
+  box-shadow: inset 0 0 0 1px var(--oro), 0 18px 36px -24px rgb(0 0 0 / 0.55);
+  transition: transform 0.6s var(--ease-out), opacity 0.4s;
+}
+.carta-prod::before { content: ''; position: absolute; inset: 5px; border: 1px solid var(--oro-luz); pointer-events: none; }
+.prod-foto { overflow: hidden; background: var(--pared); min-height: 0; }
+.prod-foto img { width: 100%; height: 100%; object-fit: cover; }
+.prod-recorte { background-repeat: no-repeat; }
+.prod-nombre { padding: 12px 6px 14px; font-family: var(--serif); font-weight: 600; font-size: 1.15rem; line-height: 1.2; display: grid; gap: 2px; }
+.prod-nombre small { font-family: var(--sans); font-weight: 500; font-size: 0.85rem; color: var(--ink-3); }
+.prod-marca { font-family: var(--sans); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--rosa); }
+.carta-prod[data-pos='0'] { z-index: 4; transform: none; }
+.carta-prod[data-pos='1'] { z-index: 3; transform: rotate(3deg) translate(8px, 6px); }
+.carta-prod[data-pos='2'] { z-index: 2; transform: rotate(-4deg) translate(-8px, 10px); }
+.carta-prod[data-pos='3'] { z-index: 1; opacity: 0; transform: scale(0.96); pointer-events: none; }
+@media (hover: hover) {
+  .taco:hover .carta-prod[data-pos='1'] { transform: rotate(8deg) translate(34%, 3%); }
+  .taco:hover .carta-prod[data-pos='2'] { transform: rotate(-8deg) translate(-34%, 5%); }
+}
+.taco-ctrl { display: flex; align-items: center; gap: 14px; position: relative; z-index: 5; }
+.taco-btn {
+  width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; cursor: pointer;
+  background: var(--blanco); border: 1px solid var(--ink); transition: background-color 0.2s, color 0.2s;
+}
+.taco-btn:hover { background: var(--negro); color: #fff; }
+.taco-cuenta { font-weight: 650; font-variant-numeric: tabular-nums; min-width: 4.5ch; text-align: center; color: var(--ink-2); }
+.taco-pista { font-size: 0.85rem; color: var(--ink-3); text-align: center; }
+@media (max-width: 860px) { .taco-pista { display: none; } }
 @media (max-width: 860px) { .productos-grid { grid-template-columns: 1fr; } }
 
 /* ---------- Opiniones ---------- */
@@ -485,12 +526,33 @@ p.err { margin-top: 10px; }
 .faq details[open] summary::after { transform: rotate(45deg); }
 .faq details p { padding: 0 0 20px; color: var(--ink-2); max-width: 64ch; }
 
-/* ---------- Pie: otra vez el rótulo ---------- */
-.pie { background: var(--negro); color: rgb(255 255 255 / 0.75); padding-bottom: 90px; }
-.pie-rotulo { display: grid; place-items: center; padding: clamp(48px, 8vw, 80px) var(--gutter) 32px; font-size: clamp(3rem, 9vw, 5rem); border-bottom: 1px solid rgb(255 255 255 / 0.08); }
-.pie-in { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px 24px; padding-top: 22px; font-size: 0.9rem; }
-.pie a { color: #fff; }
-@media (min-width: 761px) { .pie { padding-bottom: 32px; } }
+/* ---------- Pie ---------- */
+.pie { background: var(--negro); color: rgb(255 255 255 / 0.72); position: relative; margin-top: 12px; padding-bottom: 90px; font-size: 0.925rem; }
+.pie a { color: #fff; text-decoration: none; }
+.pie a:hover { color: var(--rosa-luz); }
+.pie-cta { border-bottom: 1px solid rgb(255 255 255 / 0.08); }
+.pie-cta-in { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px 40px; padding-block: clamp(40px, 6vw, 64px); }
+.pie-cta-t { font-family: var(--serif); font-weight: 600; font-size: clamp(1.6rem, 3.2vw, 2.4rem); color: #fff; line-height: 1.15; }
+.pie-cta-p { margin-top: 8px; }
+.pie .pie-cta .btn-rose:hover { color: #fff; }
+.pie-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 0.8fr; gap: 36px clamp(24px, 4vw, 56px); padding-block: clamp(44px, 6vw, 64px); }
+.pie-marca .logo { font-size: 2.6rem; align-items: flex-start; }
+.pie-marca .logo-sub { padding-left: 0; }
+.pie-marca p { margin-top: 18px; max-width: 34ch; line-height: 1.6; }
+.pie-rating { display: inline-flex; align-items: center; gap: 8px; margin-top: 14px; font-weight: 600; }
+.pie-t { font-family: var(--serif); font-weight: 600; font-size: 1rem; letter-spacing: 0.08em; color: var(--oro-luz); padding-bottom: 12px; margin-bottom: 14px; border-bottom: 1px solid rgb(217 182 108 / 0.35); }
+.pie-lista { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.pie-lista li { display: flex; gap: 10px; align-items: flex-start; line-height: 1.45; }
+.pie-lista .icon { flex: none; margin-top: 2px; color: var(--oro-luz); }
+.pie-links li { display: block; }
+.pie-horario { margin: 0; display: grid; gap: 8px; }
+.pie-horario div { display: flex; justify-content: space-between; gap: 12px; }
+.pie-horario dt { color: #fff; font-weight: 600; }
+.pie-horario dd { margin: 0; font-variant-numeric: tabular-nums; }
+.pie-base { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; padding-block: 20px; border-top: 1px solid rgb(255 255 255 / 0.08); font-size: 0.85rem; color: rgb(255 255 255 / 0.55); }
+@media (max-width: 960px) { .pie-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 560px) { .pie-grid { grid-template-columns: 1fr; } }
+@media (min-width: 761px) { .pie { padding-bottom: 0; } }
 
 /* ---------- Barra móvil ---------- */
 .dock {
@@ -521,7 +583,6 @@ p.err { margin-top: 10px; }
   content: ''; position: absolute; left: 0; right: 0; top: -12px; height: 12px;
   background: repeating-linear-gradient(90deg, var(--negro) 0 3px, transparent 3px 9px);
 }
-.pie { position: relative; margin-top: 12px; }
 /* Mechones: trazos finos que caen detrás de la cita y de los productos. */
 .cita, .productos { overflow: hidden; }
 .cita::before, .productos::before {
@@ -547,9 +608,6 @@ p.err { margin-top: 10px; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: 0.01ms !important; animation: none !important; }
 }
-/* La foto del balayage trae un icono de Instagram abajo a la izquierda: se queda fuera del encuadre. */
-.galeria .g1 img { transform: scale(1.14); transform-origin: 75% 15%; }
-.galeria .g1:hover img { transform: scale(1.18); }
 @media (max-width: 560px) {
   .largo-fila { grid-template-columns: 52px repeat(6, 1fr); min-width: 0; column-gap: 4px; }
   .largo-nombres::after { left: 52px; }

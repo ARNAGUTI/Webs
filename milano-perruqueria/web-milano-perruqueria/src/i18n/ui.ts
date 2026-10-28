@@ -150,6 +150,8 @@ const es = {
   trabajos: {
     titulo: 'Salido de sus manos',
     intro: 'Trabajos hechos en el salón.',
+    pausar: 'Pausar',
+    seguir: 'Seguir',
     alts: {
       balayage: 'Melena larga con balayage rubio y ondas, delante de un espejo dorado',
       castano: 'Corte en capas en pelo castaño con reflejos',
@@ -163,6 +165,18 @@ const es = {
     texto:
       'En el salón se trabaja con INSIGHT, cosmética profesional de origen natural hecha en Italia. Te aconsejamos el adecuado para tu pelo, para que en casa lo cuides igual que en el salón.',
     foto: 'Estantería del salón con champús y mascarillas INSIGHT',
+    taco: { prev: 'Producto anterior', next: 'Producto siguiente', pista: 'Pasa el ratón por la foto y ve cambiando de producto', estanteria: 'Nuestra estantería', estanteriaUso: 'Toda la gama, en el salón' },
+    items: {
+      'damaged-hair': ['Damaged Hair', 'Reestructura el pelo dañado'],
+      'dry-hair': ['Dry Hair', 'Nutre el pelo seco'],
+      'anti-frizz': ['Anti-Frizz', 'Hidrata y controla el encrespado'],
+      volumizing: ['Volumizing', 'Da cuerpo al pelo fino'],
+      'loss-control': ['Loss Control', 'Fortalece frente a la caída'],
+      'anti-dandruff': ['Anti Dandruff', 'Purifica el cuero cabelludo con caspa'],
+      rebalancing: ['Rebalancing', 'Equilibra el pelo graso'],
+      'post-chemistry': ['Post Chemistry', 'Cuida tras el color o la química'],
+      incolor: ['Incolor Anti-Yellow', 'Neutraliza el amarillo en rubios y canas'],
+    },
   },
   opiniones: {
     titulo: 'Lo que dicen de Milano',
@@ -202,7 +216,16 @@ const es = {
       { q: '¿Cómo cambio o anulo la cita?', a: 'Escríbenos por WhatsApp o llámanos con un día de antelación si puedes, así otra persona aprovecha la hora.' },
     ],
   },
-  pie: { legal: 'Aviso legal y privacidad' },
+  pie: {
+    legal: 'Aviso legal y privacidad',
+    cta: '¿Te reservamos un hueco?',
+    ctaTexto: 'Pide tu cita en un minuto y te la confirmamos por WhatsApp.',
+    lema: 'Peluquería en Badalona. Diagnóstico, color y corte con productos naturales.',
+    contacto: 'Contacto',
+    horario: 'Horario',
+    web: 'En la web',
+    derechos: 'Todos los derechos reservados.',
+  },
   dias: ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'],
   diasCortos: ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'],
   meses: ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'],
@@ -346,6 +369,8 @@ const ca: typeof es = {
   trabajos: {
     titulo: 'Sortit de les seves mans',
     intro: 'Treballs fets al saló.',
+    pausar: 'Pausa',
+    seguir: 'Continua',
     alts: {
       balayage: 'Cabellera llarga amb balayage ros i ones, davant d’un mirall daurat',
       castano: 'Tall en capes en cabell castany amb reflexos',
@@ -359,6 +384,18 @@ const ca: typeof es = {
     texto:
       'Al saló es treballa amb INSIGHT, cosmètica professional d’origen natural feta a Itàlia. T’aconsellem l’adequat per al teu cabell, perquè a casa el cuidis igual que al saló.',
     foto: 'Prestatgeria del saló amb xampús i mascaretes INSIGHT',
+    taco: { prev: 'Producte anterior', next: 'Producte següent', pista: 'Passa el ratolí per la foto i ves canviant de producte', estanteria: 'La nostra prestatgeria', estanteriaUso: 'Tota la gamma, al saló' },
+    items: {
+      'damaged-hair': ['Damaged Hair', 'Reestructura el cabell danyat'],
+      'dry-hair': ['Dry Hair', 'Nodreix el cabell sec'],
+      'anti-frizz': ['Anti-Frizz', 'Hidrata i controla l’encrespat'],
+      volumizing: ['Volumizing', 'Dona cos al cabell fi'],
+      'loss-control': ['Loss Control', 'Enforteix davant la caiguda'],
+      'anti-dandruff': ['Anti Dandruff', 'Purifica el cuir cabellut amb caspa'],
+      rebalancing: ['Rebalancing', 'Equilibra el cabell gras'],
+      'post-chemistry': ['Post Chemistry', 'Cuida després del color o la química'],
+      incolor: ['Incolor Anti-Yellow', 'Neutralitza el groc en rossos i canes'],
+    },
   },
   opiniones: {
     titulo: 'El que diuen de Milano',
@@ -398,7 +435,16 @@ const ca: typeof es = {
       { q: 'Com canvio o anul·lo la cita?', a: 'Escriu-nos per WhatsApp o truca’ns amb un dia d’antelació si pots, així una altra persona aprofita l’hora.' },
     ],
   },
-  pie: { legal: 'Avís legal i privacitat' },
+  pie: {
+    legal: 'Avís legal i privacitat',
+    cta: 'Et reservem un forat?',
+    ctaTexto: 'Demana hora en un minut i te la confirmem per WhatsApp.',
+    lema: 'Perruqueria a Badalona. Diagnòstic, color i tall amb productes naturals.',
+    contacto: 'Contacte',
+    horario: 'Horari',
+    web: 'Al web',
+    derechos: 'Tots els drets reservats.',
+  },
   dias: ['diumenge', 'dilluns', 'dimarts', 'dimecres', 'dijous', 'divendres', 'dissabte'],
   diasCortos: ['dg', 'dl', 'dt', 'dc', 'dj', 'dv', 'ds'],
   meses: ['gen', 'febr', 'març', 'abr', 'maig', 'juny', 'jul', 'ag', 'set', 'oct', 'nov', 'des'],
