@@ -1,0 +1,408 @@
+---
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import { ui, type Lang } from '../i18n/ui';
+import { negocio, horario, lineas, servicios, largos } from '../data/negocio';
+
+import imgCorte from '../assets/img/corte.jpg';
+import imgBalayage from '../assets/img/balayage.jpg';
+import imgLavado from '../assets/img/lavado.jpg';
+import imgTratamiento from '../assets/img/tratamiento.jpg';
+import imgPeinado from '../assets/img/peinado.jpg';
+import imgOndas from '../assets/img/ondas.jpg';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = ui[lang];
+const r = t.ruta;
+const other: Lang = lang === 'es' ? 'ca' : 'es';
+const hrefFor = (l: Lang) => (l === 'es' ? '/' : '/ca/');
+const tel = `tel:${negocio.telefonoE164}`;
+const v = negocio.valoracion;
+const fill = (tpl: string, vars: Record<string, string | number>) => tpl.replace(/\{(\w)\}/g, (_, k) => String(vars[k] ?? ''));
+const precio = (p: number) => (p ? fill(t.lineas.desde, { p }) : t.lineas.gratis);
+
+const galeria = [
+  { key: 'corte', src: imgCorte },
+  { key: 'balayage', src: imgBalayage },
+  { key: 'peinado', src: imgPeinado },
+  { key: 'tratamiento', src: imgTratamiento },
+  { key: 'ondas', src: imgOndas },
+] as const;
+
+// Lunes a domingo para la tabla de horario.
+const ordenDias = [1, 2, 3, 4, 5, 6, 0];
+const tramosTexto = (d: number) => horario[d].map(([a, b]) => `${a} – ${b}`).join(' · ');
+const cap = (x: string) => x.charAt(0).toUpperCase() + x.slice(1);
+
+const estaciones = ['destino', 'pelo', 'largo', 'hora', 'datos'] as const;
+
+const cliente = {
+  lang,
+  horario,
+  whatsapp: negocio.whatsapp,
+  servicios: servicios.map((s) => ({ id: s.id, linea: s.linea, min: s.min, desde: s.desde, nombre: t.servicios.nombres[s.id] })),
+  lineas: lineas.map((l) => ({ id: l.id, num: l.num, nombre: t.lineas.nombres[l.id] })),
+  largos: largos.map((l) => ({ id: l.id, cm: l.cm, nombre: t.ruta.largo.nombres[l.id] })),
+  negocio: { nombre: negocio.nombre, direccion: `${negocio.direccion.calle}, ${negocio.direccion.cp} ${negocio.direccion.ciudad}` },
+  t: {
+    dias: t.dias, diasCortos: t.diasCortos, meses: t.meses, hoy: t.hoy, manana: t.manana,
+    ruta: r, hero: t.hero, visita: t.visita, desde: t.lineas.desde, gratis: t.lineas.gratis, linea: t.lineas.linea,
+  },
+};
+---
+<a class="skip" href="#contenido">{t.skip}</a>
+
+<header class="top" data-top>
+  <a class="brand" href={hrefFor(lang)} aria-label={negocio.nombre}>
+    <span class="badge" aria-hidden="true">M</span>
+    <span class="brand-name">Milano</span>
+  </a>
+  <nav class="nav" aria-label="Menú">
+    <a href="#ruta">{t.nav.ruta}</a>
+    <a href="#lineas">{t.nav.lineas}</a>
+    <a href="#patri">{t.nav.patri}</a>
+    <a href="#opiniones">{t.nav.opiniones}</a>
+    <a href="#visita">{t.nav.visita}</a>
+  </nav>
+  <div class="top-actions">
+    <a class="lang" href={hrefFor(other)} hreflang={other} lang={other} data-lang>{other.toUpperCase()}</a>
+    <a class="btn btn-ghost btn-sm" href={tel}><Icon name="phone" size={18} /><span>{negocio.telefono}</span></a>
+  </div>
+</header>
+
+<main id="app" data-cliente={JSON.stringify(cliente)}>
+  <span id="contenido" tabindex="-1"></span>
+
+  <!-- Andén: la banda roja con el nombre y los destinos -->
+  <section class="hero">
+    <div class="band">
+      <div class="band-in">
+        <h1 class="band-title">
+          <span class="band-name">Milano</span>
+          <span class="band-sub">{t.hero.sub}</span>
+        </h1>
+        <p class="band-dir"><Icon name="pin" size={20} />{t.hero.lugar}</p>
+      </div>
+    </div>
+
+    <div class="platform">
+      <figure class="poster">
+        <Image src={imgBalayage} alt={t.galeria.alts.balayage} widths={[480, 720, 960]} sizes="(max-width: 760px) 100vw, 34vw" loading="eager" fetchpriority="high" />
+      </figure>
+
+      <div class="platform-info">
+        <div class="sign-row">
+          <p class="open-sign" data-open>
+            <span class="open-dot" aria-hidden="true"></span>
+            <b data-open-word>{t.hero.abierto}</b>
+            <span data-status></span>
+          </p>
+          <a class="rating" href={negocio.mapsUrl} target="_blank" rel="noopener">
+            <span class="rating-n">{v.nota}</span>
+            <span class="stars" aria-hidden="true">{[1, 2, 3, 4, 5].map(() => <Icon name="star" size={15} />)}</span>
+            <span class="rating-c">{fill(t.hero.resenas, { n: v.resenas })}</span>
+          </a>
+        </div>
+        <p class="lema">{t.hero.lema}</p>
+
+        <h2 class="dest-q">{t.hero.pregunta}</h2>
+        <ul class="dest" role="list">
+          {lineas.map((l) => (
+            <li>
+              <a class="dest-btn" href="#ruta" data-go={l.id} style={`--lc:${l.color}`}>
+                <span class="line-badge">{l.num}</span>
+                <span class="dest-name">{t.lineas.nombres[l.id]}</span>
+                <Icon name="arrow" size={20} class="dest-arrow" />
+              </a>
+            </li>
+          ))}
+        </ul>
+        <p class="metro-note"><Icon name="metro" size={18} />{t.hero.metro} <span class="l2">L2</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cómo trabaja Patri: tres paradas de una línea -->
+  <section class="patri" id="patri">
+    <div class="wrap">
+      <h2 class="h2">{t.patri.titulo}</h2>
+      <p class="intro">{t.patri.intro}</p>
+      <ol class="stops-line" role="list">
+        {t.patri.paradas.map((p) => (
+          <li>
+            <span class="stop-dot" aria-hidden="true"></span>
+            <h3>{p.t}</h3>
+            <p>{p.d}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- Planificador: diagnóstico corto + cita por WhatsApp -->
+  <section class="ruta" id="ruta">
+    <div class="wrap">
+      <h2 class="h2">{r.titulo}</h2>
+      <p class="intro">{r.intro}</p>
+
+      <p class="resume" data-resume hidden>
+        <Icon name="flag" size={18} /><span>{r.guardado}</span>
+        <button type="button" class="link-btn" data-empezar>{r.empezar}</button>
+      </p>
+
+      <nav class="map" aria-label={r.titulo}>
+        <ol class="map-line" role="list" data-map>
+          {estaciones.map((e) => (
+            <li data-stop={e}>
+              <a href={`#st-${e}`}>
+                <span class="map-dot" aria-hidden="true"></span>
+                <span class="map-name">{r.estaciones[e]}</span>
+              </a>
+              <span class="map-flag" aria-hidden="true"><Icon name="flag" size={14} />{r.dejaste}</span>
+            </li>
+          ))}
+        </ol>
+      </nav>
+
+      <form class="ruta-form" data-ruta novalidate>
+        <div class="stations">
+          <fieldset class="station" id="st-destino" data-station="destino">
+            <legend><span class="st-dot" aria-hidden="true"></span>{r.destino.linea}</legend>
+            <div class="chips chips-lines">
+              {lineas.map((l) => (
+                <label class="chip chip-line" style={`--lc:${l.color}`}>
+                  <input type="radio" name="linea" value={l.id} />
+                  <span><b class="line-badge">{l.num}</b>{t.lineas.nombres[l.id]}</span>
+                </label>
+              ))}
+            </div>
+            <p class="sub-q">{r.destino.servicio}</p>
+            <div class="svc-list" data-svcs>
+              {servicios.map((s) => {
+                const l = lineas.find((x) => x.id === s.linea)!;
+                return (
+                  <label class="svc" data-linea={s.linea} style={`--lc:${l.color}`}>
+                    <input type="radio" name="servicio" value={s.id} />
+                    <span class="svc-body">
+                      <b>{t.servicios.nombres[s.id]}</b>
+                      <small>{t.servicios.detalles[s.id]}</small>
+                    </span>
+                    <span class="svc-meta"><b>{precio(s.desde)}</b><small>{fill(t.lineas.min, { m: s.min })}</small></span>
+                  </label>
+                );
+              })}
+            </div>
+            <p class="err" data-err="servicio" aria-live="polite"></p>
+          </fieldset>
+
+          <fieldset class="station" id="st-pelo" data-station="pelo">
+            <legend><span class="st-dot" aria-hidden="true"></span>{r.pelo.tipo}</legend>
+            <div class="chips">
+              {Object.entries(r.pelo.tipos).map(([k, label]) => (
+                <label class="chip"><input type="radio" name="pelo" value={k} /><span>{label}</span></label>
+              ))}
+            </div>
+            <p class="sub-q">{r.pelo.estado}</p>
+            <div class="chips">
+              {Object.entries(r.pelo.estados).map(([k, label]) => (
+                <label class="chip chip-check"><input type="checkbox" name="estado" value={k} /><span><Icon name="check" size={16} />{label}</span></label>
+              ))}
+            </div>
+            <p class="err" data-err="pelo" aria-live="polite"></p>
+          </fieldset>
+
+          <fieldset class="station" id="st-largo" data-station="largo">
+            <legend><span class="st-dot" aria-hidden="true"></span>{r.largo.pregunta}</legend>
+            <p class="hint">{r.largo.ayuda}</p>
+            <p class="hint" data-largo-na hidden>{r.largo.noAplica}</p>
+            <div class="largo" data-largo>
+              <div class="largo-head" aria-hidden="true"><span></span><span>{r.largo.ahora}</span><span>{r.largo.quiero}</span></div>
+              {largos.map((l) => (
+                <div class="largo-row" data-largo-row={l.id}>
+                  <span class="largo-name" id={`lg-${l.id}`}>{r.largo.nombres[l.id]}</span>
+                  <label class="largo-pick"><input type="radio" name="ahora" value={l.id} aria-labelledby={`lg-${l.id} ah-l`} /><span class="pick pick-now" aria-hidden="true"></span></label>
+                  <label class="largo-pick"><input type="radio" name="quiero" value={l.id} aria-labelledby={`lg-${l.id} qu-l`} /><span class="pick pick-want" aria-hidden="true"></span></label>
+                </div>
+              ))}
+              <span id="ah-l" hidden>{r.largo.ahora}</span>
+              <span id="qu-l" hidden>{r.largo.quiero}</span>
+            </div>
+            <p class="largo-msg" data-largo-msg aria-live="polite"></p>
+            <label class="check"><input type="checkbox" name="foto" /><span><Icon name="camera" size={18} />{r.largo.foto}</span></label>
+            <p class="err" data-err="largo" aria-live="polite"></p>
+          </fieldset>
+
+          <fieldset class="station" id="st-hora" data-station="hora">
+            <legend><span class="st-dot" aria-hidden="true"></span>{r.estaciones.hora}</legend>
+            <div class="chips chips-days" data-days></div>
+            <p class="err" data-err="dia" aria-live="polite"></p>
+            <div class="chips chips-slots" data-slots><p class="hint">{r.hora.eligeDia}</p></div>
+            <p class="err" data-err="hora" aria-live="polite"></p>
+            <p class="hint small">{r.comoFunciona}</p>
+          </fieldset>
+
+          <fieldset class="station" id="st-datos" data-station="datos">
+            <legend><span class="st-dot" aria-hidden="true"></span>{r.estaciones.datos}</legend>
+            <p class="hola" data-hola hidden><span data-hola-text></span> <button type="button" class="link-btn" data-olvidar>{r.datos.noSoy}</button></p>
+            <div class="fields">
+              <label class="field"><span>{r.datos.nombre}</span><input name="nombre" autocomplete="given-name" maxlength="40" /><em class="err" data-err="nombre" aria-live="polite"></em></label>
+              <label class="field"><span>{r.datos.tel}</span><input name="tel" type="tel" inputmode="tel" autocomplete="tel" maxlength="16" /><em class="err" data-err="tel" aria-live="polite"></em></label>
+              <label class="field field-wide"><span>{r.datos.nota}</span><input name="nota" maxlength="140" placeholder={r.datos.notaPh} /></label>
+            </div>
+            <label class="check"><input type="checkbox" name="recordar" checked /><span>{r.datos.recordar}</span></label>
+          </fieldset>
+        </div>
+
+        <aside class="ficha" data-ficha aria-live="polite">
+          <p class="ficha-t">{r.ficha}</p>
+          <div class="ficha-line" data-ficha-line><span class="line-badge" data-ficha-badge>–</span><b data-ficha-svc>{r.fichaVacia}</b></div>
+          <dl class="ficha-dl">
+            <div><dt>{r.estaciones.pelo}</dt><dd data-f="pelo">—</dd></div>
+            <div><dt>{r.estaciones.largo}</dt><dd data-f="largo">—</dd></div>
+            <div><dt>{r.estaciones.hora}</dt><dd data-f="hora">—</dd></div>
+          </dl>
+          <p class="ficha-precio"><b data-f="precio">—</b><small>{r.precioOrientativo}</small></p>
+          <button class="btn btn-primary btn-block" type="submit"><Icon name="chat" size={20} />{r.enviar}</button>
+          <p class="ficha-call">{fill(r.llamarMejor, { t: '' })}<a href={tel}>{negocio.telefono}</a></p>
+        </aside>
+      </form>
+
+      <div class="ok" data-ok hidden tabindex="-1">
+        <p class="ok-t"><Icon name="check" size={22} />{r.okTitulo}</p>
+        <p class="ok-sum" data-ok-summary></p>
+        <p>{r.okTexto}</p>
+        <div class="ok-actions">
+          <button type="button" class="btn btn-primary" data-ics><Icon name="calendar" size={18} />{r.calendario}</button>
+          <a class="btn btn-ghost" data-reopen href="#" target="_blank" rel="noopener"><Icon name="chat" size={18} />{r.abrirDeNuevo}</a>
+          <button type="button" class="link-btn" data-reset>{r.otra}</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Servicios como líneas de metro -->
+  <section class="lineas" id="lineas">
+    <div class="wrap">
+      <h2 class="h2">{t.lineas.titulo}</h2>
+      <p class="intro">{t.lineas.intro}</p>
+      <div class="lines-grid">
+        {lineas.map((l) => (
+          <div class="line-card" style={`--lc:${l.color}`}>
+            <h3 class="line-head"><span class="line-badge">{l.num}</span>{t.lineas.nombres[l.id]}</h3>
+            <ul class="line-stops" role="list">
+              {servicios.filter((s) => s.linea === l.id).map((s) => (
+                <li>
+                  <a href="#ruta" data-pick={s.id}>
+                    <span class="ls-name">{t.servicios.nombres[s.id]}<small>{fill(t.lineas.min, { m: s.min })}</small></span>
+                    <span class="ls-price">{precio(s.desde)}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Fotos como carteles del andén -->
+  <section class="galeria" aria-labelledby="gal-t">
+    <div class="wrap">
+      <h2 class="h2" id="gal-t">{t.galeria.titulo}</h2>
+    </div>
+    <ul class="posters" role="list">
+      {galeria.map((g) => (
+        <li class="poster-item">
+          <Image src={g.src} alt={t.galeria.alts[g.key]} widths={[360, 540, 720]} sizes="(max-width: 760px) 72vw, 26vw" loading="lazy" />
+        </li>
+      ))}
+    </ul>
+    <p class="wrap muestra">{t.galeria.muestra}</p>
+  </section>
+
+  <section class="opiniones" id="opiniones">
+    <div class="wrap">
+      <div class="op-head">
+        <h2 class="h2">{t.opiniones.titulo}</h2>
+        <p class="op-score"><span class="op-n">{v.nota}</span><span class="stars" aria-hidden="true">{[1, 2, 3, 4, 5].map(() => <Icon name="star" size={18} />)}</span><span>{fill(t.opiniones.nota, { v: v.nota, n: v.resenas })}</span></p>
+      </div>
+      <ul class="quotes" role="list">
+        {t.opiniones.lista.map((o) => (
+          <li><blockquote lang="es"><p>{o.q}</p></blockquote><cite>{o.a}</cite></li>
+        ))}
+      </ul>
+      <a class="btn btn-ghost" href={negocio.mapsUrl} target="_blank" rel="noopener">{t.opiniones.ver}<Icon name="arrow" size={18} /></a>
+    </div>
+  </section>
+
+  <section class="visita" id="visita">
+    <div class="wrap visita-grid">
+      <div>
+        <h2 class="h2">{t.visita.titulo}</h2>
+        <p class="status-line" data-status-line></p>
+        <table class="hours">
+          <tbody>
+            {ordenDias.map((d) => (
+              <tr data-day={d}>
+                <th scope="row">{cap(t.dias[d])}</th>
+                <td>{horario[d].length ? tramosTexto(d) : t.visita.cerradoDia}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <ul class="facts" role="list">
+          <li><Icon name="pin" size={20} />{negocio.direccion.calle}, {negocio.direccion.cp} {negocio.direccion.ciudad}</li>
+          <li><Icon name="metro" size={20} />{t.hero.metro} (L2)</li>
+          <li><Icon name="calendar" size={20} />{t.visita.datos[0]}</li>
+          <li><Icon name="access" size={20} />{t.visita.datos[1]}</li>
+          <li><Icon name="card" size={20} />{t.visita.datos[2]}</li>
+        </ul>
+        <div class="visita-actions">
+          <a class="btn btn-primary" href={negocio.mapsUrl} target="_blank" rel="noopener"><Icon name="route" size={18} />{t.visita.comoLlegar}</a>
+          <a class="btn btn-ghost" href={tel}><Icon name="phone" size={18} />{negocio.telefono}</a>
+        </div>
+      </div>
+      <div class="mapbox" data-mapbox data-src={negocio.mapsEmbed} data-title={negocio.nombre}>
+        <button type="button" class="map-load" data-map-load>
+          <Icon name="pin" size={28} />
+          <b>{t.visita.verMapa}</b>
+          <small>{t.visita.mapaAviso}</small>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section class="faq" aria-labelledby="faq-t">
+    <div class="wrap">
+      <h2 class="h2" id="faq-t">{t.faq.titulo}</h2>
+      <div class="faq-list">
+        {t.faq.lista.map((f) => (
+          <details><summary>{f.q}</summary><p>{f.a}</p></details>
+        ))}
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="band band-foot">
+    <div class="band-in">
+      <p class="band-title foot-title"><span class="band-name">Milano</span><span class="band-sub">{t.pie.hecha}</span></p>
+    </div>
+  </div>
+  <div class="wrap foot-in">
+    <p>{negocio.direccion.calle}, {negocio.direccion.cp} {negocio.direccion.ciudad} · <a href={tel}>{negocio.telefono}</a></p>
+    <p><a href={lang === 'es' ? '/legal/' : '/ca/legal/'}>{t.pie.legal}</a> · <a href={hrefFor(other)} hreflang={other} lang={other} data-lang>{other === 'ca' ? 'Català' : 'Español'}</a></p>
+  </div>
+</footer>
+
+<div class="dock" aria-label={t.planificar}>
+  <a class="btn btn-ghost" href={tel}><Icon name="phone" size={18} />{t.llamar}</a>
+  <a class="btn btn-primary" href="#ruta"><Icon name="route" size={18} />{t.nav.ruta}</a>
+</div>
+
+<script>
+  import { init } from '../scripts/app';
+  init();
+</script>

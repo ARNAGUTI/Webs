@@ -1,0 +1,49 @@
+---
+// Aviso legal, privacidad y cookies en una sola página.
+// PENDIENTE: titular, NIF y email del negocio (marcados con [ ]).
+import { ui, type Lang } from '../i18n/ui';
+import { negocio } from '../data/negocio';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = ui[lang];
+const home = lang === 'es' ? '/' : '/ca/';
+const dir = `${negocio.direccion.calle}, ${negocio.direccion.cp} ${negocio.direccion.ciudad} (${negocio.direccion.provincia})`;
+---
+<header class="top is-solid legal-top">
+  <a class="brand" href={home} aria-label={negocio.nombre}>
+    <span class="badge" aria-hidden="true">M</span>
+    <span class="brand-name">Milano</span>
+  </a>
+  <a class="btn btn-ghost btn-sm" href={home}>{t.legal.volver}</a>
+</header>
+<main class="legal wrap" id="contenido">
+  <h1 class="h2">{t.legal.titulo}</h1>
+  {lang === 'es' ? (
+    <>
+      <h2>Titular de la web</h2>
+      <p>{negocio.nombre}. Titular: [nombre o razón social]. NIF: [NIF]. Domicilio: {dir}. Teléfono: {negocio.telefono}. Email: [email].</p>
+      <h2>Qué datos tratamos</h2>
+      <p>Esta web no tiene formularios que envíen datos a un servidor. Cuando pides cita, se abre WhatsApp con un mensaje que escribes tú y que decides enviar. Los datos que nos mandes por WhatsApp o por teléfono (nombre, móvil, cita y lo que nos cuentes de tu pelo) solo se usan para gestionar tu cita, y no se ceden a terceros.</p>
+      <p>Si marcas "Recordar mis datos", tu nombre y tu móvil se guardan solo en tu propio móvil o navegador (almacenamiento local), no en ningún servidor. También se guarda ahí la cita a medio preparar, para que puedas seguir otro día. Puedes borrarlo con "No soy yo", con "Empezar de nuevo" o limpiando los datos del navegador.</p>
+      <p>Puedes pedir acceso, rectificación o supresión de tus datos escribiéndonos o llamando al {negocio.telefono}. Si no te atendemos bien, puedes reclamar a la Agencia Española de Protección de Datos (aepd.es).</p>
+      <h2>Cookies</h2>
+      <p>Esta web no usa cookies propias ni de analítica. El mapa de Google solo se carga si pulsas "Ver el mapa aquí"; en ese momento Google puede instalar sus cookies según su política.</p>
+      <h2>Propiedad intelectual</h2>
+      <p>Los textos, el diseño y las fotos de esta web pertenecen a su titular o se usan con licencia. No se pueden copiar sin permiso.</p>
+    </>
+  ) : (
+    <>
+      <h2>Titular del web</h2>
+      <p>{negocio.nombre}. Titular: [nom o raó social]. NIF: [NIF]. Domicili: {dir}. Telèfon: {negocio.telefono}. Correu: [correu].</p>
+      <h2>Quines dades tractem</h2>
+      <p>Aquest web no té formularis que enviïn dades a un servidor. Quan demanes hora, s’obre WhatsApp amb un missatge que escrius tu i que decideixes enviar. Les dades que ens enviïs per WhatsApp o per telèfon (nom, mòbil, cita i el que ens expliquis del teu cabell) només s’utilitzen per gestionar la cita, i no se cedeixen a tercers.</p>
+      <p>Si marques "Recordar les meves dades", el teu nom i el teu mòbil es guarden només al teu mòbil o navegador (emmagatzematge local), no en cap servidor. També s’hi guarda la cita a mig preparar, perquè puguis continuar un altre dia. Ho pots esborrar amb "No sóc jo", amb "Començar de nou" o netejant les dades del navegador.</p>
+      <p>Pots demanar l’accés, la rectificació o la supressió de les teves dades escrivint-nos o trucant al {negocio.telefono}. Si no t’atenem bé, pots reclamar a l’Agència Espanyola de Protecció de Dades (aepd.es).</p>
+      <h2>Galetes</h2>
+      <p>Aquest web no fa servir galetes pròpies ni d’analítica. El mapa de Google només es carrega si prems "Veure el mapa aquí"; en aquell moment Google pot instal·lar les seves galetes segons la seva política.</p>
+      <h2>Propietat intel·lectual</h2>
+      <p>Els textos, el disseny i les fotos d’aquest web pertanyen al seu titular o s’utilitzen amb llicència. No es poden copiar sense permís.</p>
+    </>
+  )}
+</main>
