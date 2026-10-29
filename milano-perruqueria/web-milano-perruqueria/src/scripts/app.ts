@@ -658,18 +658,22 @@ function initVisor() {
   visor.addEventListener('keydown', (e) => { if (e.key === 'ArrowRight') mover(1); if (e.key === 'ArrowLeft') mover(-1); });
 }
 
-// ---------- Fondo vivo: luces que se desplazan y un mechón que se dibuja al bajar ----------
+// ---------- Fondo vivo: un mechón que crece al bajar ----------
 function initFondo() {
   const main = $('main#app');
+  const caja = $('[data-hilo-caja]');
   const svg = $<SVGSVGElement>('[data-hilo]');
-  if (!main || !svg) return;
+  if (!main || !caja || !svg) return;
   const trazos = $$<SVGPathElement>('path', svg);
-  let largo = 0;
+  const quieto = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let alto = 0;
 
   // Un mechón que baja en curvas de lado a lado, con algo de irregularidad (siempre la misma).
   function dibujar() {
     const W = main!.clientWidth;
-    const H = main!.scrollHeight;
+    // offsetHeight: el alto real de la página, sin contar lo que el propio mechón desplaza.
+    const H = main!.offsetHeight;
+    alto = H;
     svg!.setAttribute('viewBox', `0 0 ${W} ${H}`);
     const paso = Math.max(420, Math.min(700, W * 0.55));
     // Tangentes verticales en cada punto: la curva enlaza sin picos.
@@ -689,22 +693,17 @@ function initFondo() {
     trazos.forEach((p, i) => {
       p.setAttribute('d', d);
       // La línea rosa va un poco desplazada, como dos hebras del mismo mechón.
-      p.style.transform = i === 2 ? 'translate(14px, 10px)' : '';
+      if (i === 2) p.setAttribute('transform', 'translate(14 10)');
     });
-    largo = trazos[0].getTotalLength();
-    ultimo = -1;
-    trazos.forEach((p) => { p.style.strokeDasharray = `${largo}`; });
     avanzar();
   }
-  let ultimo = -1;
+  // La caja sube y el dibujo baja lo mismo: el mechón no se mueve, pero se ve solo hasta donde has llegado.
   function avanzar() {
-    const total = main!.scrollHeight;
-    const progreso = Math.min(1, (window.scrollY + innerHeight * 0.75) / total);
-    const paso = Math.round(progreso * 50) / 50;
-    if (paso === ultimo) return;
-    ultimo = paso;
-    const quieto = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    trazos.forEach((p) => { p.style.strokeDashoffset = quieto ? '0' : `${largo * (1 - paso)}`; });
+    if (quieto) return;
+    const visto = Math.min(alto, window.scrollY + innerHeight * 0.8);
+    const oculto = Math.max(0, alto - visto);
+    caja!.style.transform = `translate3d(0, ${-oculto}px, 0)`;
+    svg!.style.transform = `translate3d(0, ${oculto}px, 0)`;
   }
   let pendiente = false;
   window.addEventListener('scroll', () => {

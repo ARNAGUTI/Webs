@@ -671,7 +671,7 @@ p.err { margin-top: 10px; }
    En vez de un color por sección: una sola pared cálida con tres luces de salón que flotan
    despacio y cambian de sitio al bajar, y un mechón dorado y rosa que se va dibujando
    de arriba abajo y pasa por detrás de las chapas negras. */
-main#app { position: relative; isolation: isolate; }
+main#app { position: relative; isolation: isolate; overflow-x: clip; }
 main#app > section { position: relative; z-index: 1; }
 .fondo { position: fixed; inset: 0; z-index: -2; pointer-events: none; overflow: hidden; background: var(--pared); }
 .luz { position: absolute; border-radius: 50%; opacity: 0.85; will-change: transform; }
@@ -684,7 +684,10 @@ main#app > section { position: relative; z-index: 1; }
   100% { transform: translate(-4vw, 8vh) scale(0.94); }
 }
 /* El mechón: por encima del fondo, por debajo de las secciones oscuras y del contenido. */
-.hilo { position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; overflow: visible; }
+/* El mechón se pinta una sola vez; para "dibujarlo" se desplazan dos capas en sentidos
+   contrarios (la caja recorta, el dibujo se queda quieto): todo en la GPU, sin repintar. */
+.hilo-caja { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; will-change: transform; }
+.hilo { position: absolute; left: 0; top: 0; width: 100%; height: 100%; overflow: visible; will-change: transform; }
 .hilo path { fill: none; stroke-linecap: round; }
 .hilo-sombra { stroke: rgb(176 134 54 / 0.14); stroke-width: 22; }
 .hilo-oro { stroke: rgb(176 134 54 / 0.7); stroke-width: 3; }
@@ -704,7 +707,7 @@ main#app > section { position: relative; z-index: 1; }
 .trabajos .cinta { overflow: hidden; }
 .fachada { position: relative; z-index: 1; }
 @media (prefers-reduced-motion: reduce) { .luz { animation: none; } }
-@media (max-width: 760px) { .hilo { opacity: 0.55; } }
+@media (max-width: 760px) { .hilo-caja { opacity: 0.55; } }
 
 /* ---------- El momento: se encienden los focos y se pinta el trazo ---------- */
 @media (prefers-reduced-motion: no-preference) {
