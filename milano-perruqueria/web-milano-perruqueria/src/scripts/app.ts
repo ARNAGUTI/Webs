@@ -116,6 +116,7 @@ export function init() {
     mapbox.classList.add('is-loaded');
   });
 
+  initFondo();
   initCinta();
   initTaco();
   initRuta(c, now, tramosDe, SLOT);
@@ -650,4 +651,61 @@ function initVisor() {
   // Pulsar fuera de la foto cierra.
   visor.addEventListener('click', (e) => { if (e.target === visor) visor.close(); });
   visor.addEventListener('keydown', (e) => { if (e.key === 'ArrowRight') mover(1); if (e.key === 'ArrowLeft') mover(-1); });
+}
+
+// ---------- Fondo vivo: luces que se desplazan y un mechón que se dibuja al bajar ----------
+function initFondo() {
+  const main = $('main#app');
+  const svg = $<SVGSVGElement>('[data-hilo]');
+  if (!main || !svg) return;
+  const trazos = $$<SVGPathElement>('path', svg);
+  let largo = 0;
+
+  // Un mechón que baja en curvas de lado a lado, con algo de irregularidad (siempre la misma).
+  function dibujar() {
+    const W = main!.clientWidth;
+    const H = main!.scrollHeight;
+    svg!.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    const paso = Math.max(420, Math.min(700, W * 0.55));
+    // Tangentes verticales en cada punto: la curva enlaza sin picos.
+    let x = W * 0.62;
+    let y = 0;
+    let k = 0;
+    let d = `M ${x} ${y}`;
+    while (y < H) {
+      const lado = k % 2 === 0 ? 0.1 : 0.9;
+      const x2 = W * (lado + Math.sin(k * 1.7) * 0.06);
+      const y2 = Math.min(H, y + paso);
+      d += ` C ${x} ${y + paso * 0.5}, ${x2} ${y2 - paso * 0.5}, ${x2} ${y2}`;
+      x = x2;
+      y = y2;
+      k++;
+    }
+    trazos.forEach((p, i) => {
+      p.setAttribute('d', d);
+      // La línea rosa va un poco desplazada, como dos hebras del mismo mechón.
+      p.style.transform = i === 2 ? 'translate(14px, 10px)' : '';
+    });
+    largo = trazos[0].getTotalLength();
+    trazos.forEach((p) => { p.style.strokeDasharray = `${largo}`; });
+    avanzar();
+  }
+  function avanzar() {
+    const total = main!.scrollHeight;
+    const progreso = Math.min(1, (window.scrollY + innerHeight * 0.75) / total);
+    const quieto = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    trazos.forEach((p) => { p.style.strokeDashoffset = quieto ? '0' : `${largo * (1 - progreso)}`; });
+    document.documentElement.style.setProperty('--scroll', String(progreso));
+  }
+  let pendiente = false;
+  window.addEventListener('scroll', () => {
+    if (pendiente) return;
+    pendiente = true;
+    requestAnimationFrame(() => { pendiente = false; avanzar(); });
+  }, { passive: true });
+  if ('ResizeObserver' in window) {
+    let t: number | undefined;
+    new ResizeObserver(() => { clearTimeout(t); t = window.setTimeout(dibujar, 150); }).observe(main);
+  } else window.addEventListener('resize', dibujar);
+  dibujar();
 }

@@ -108,6 +108,9 @@ const cliente = {
 </header>
 
 <main id="app" data-cliente={JSON.stringify(cliente)}>
+  <!-- Fondo vivo: luz de salón que se mueve y un mechón que se dibuja al bajar por la página -->
+  <div class="fondo" aria-hidden="true"><i class="luz l1"></i><i class="luz l2"></i><i class="luz l3"></i></div>
+  <svg class="hilo" aria-hidden="true" data-hilo><path class="hilo-sombra" /><path class="hilo-oro" /><path class="hilo-rosa" /></svg>
   <span id="contenido" tabindex="-1"></span>
 
   <!-- La fachada: el rótulo iluminado y el escaparate -->

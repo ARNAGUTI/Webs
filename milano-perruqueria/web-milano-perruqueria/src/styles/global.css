@@ -184,7 +184,7 @@ section { position: relative; }
 .marco img { width: 100%; height: 100%; object-fit: cover; }
 
 /* Patri */
-.patri { padding-block: clamp(72px, 11vw, 128px); background: var(--blanco); }
+.patri { padding-block: clamp(72px, 11vw, 128px); }
 .patri-grid { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr); gap: clamp(32px, 6vw, 88px); align-items: center; }
 .marco-alto img { aspect-ratio: 4 / 5; object-position: 50% 30%; }
 .claves { list-style: none; margin: 32px 0 0; padding: 0; display: grid; gap: 0; border-top: 1px solid var(--oro); }
@@ -205,7 +205,7 @@ section { position: relative; }
 }
 .resume .link-btn { margin-left: auto; }
 
-.pasos { --progress: 0; position: sticky; top: 64px; z-index: 5; margin-top: clamp(28px, 4vw, 44px); background: var(--pared); padding: 14px 0 10px; }
+.pasos { --progress: 0; position: sticky; top: 64px; z-index: 5; margin-top: clamp(28px, 4vw, 44px); background: rgb(247 246 243 / 0.82); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 14px 0 10px; }
 .pasos-trazo { position: absolute; left: 0; right: 0; top: 22px; width: 100%; height: 24px; overflow: visible; }
 .pasos-trazo path { fill: none; stroke-linecap: round; }
 .pasos-base { stroke: var(--rule-2); stroke-width: 3; stroke-dasharray: 2 7; }
@@ -512,7 +512,7 @@ p.err { margin-top: 10px; }
 @media (prefers-reduced-motion: reduce) { .cinta { overflow-x: auto; } .cinta-pista { animation: none; } .cinta-ctrl { display: none; } }
 
 /* ---------- Productos ---------- */
-.productos { padding-block: clamp(72px, 11vw, 128px); background: var(--roble-velo); }
+.productos { padding-block: clamp(72px, 11vw, 128px); }
 .productos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 6vw, 88px); align-items: center; }
 /* El taco de fotos: la de arriba se ve entera; al pasar el ratón se abren las de debajo. */
 .taco { position: relative; display: grid; justify-items: center; gap: 18px; outline: none; }
@@ -564,7 +564,7 @@ p.err { margin-top: 10px; }
 @media (max-width: 760px) { .quotes { grid-template-columns: 1fr; } }
 
 /* ---------- Visita ---------- */
-.visita { padding-block: clamp(72px, 11vw, 128px); background: var(--blanco); }
+.visita { padding-block: clamp(72px, 11vw, 128px); }
 .visita-grid { display: grid; grid-template-columns: 0.8fr 1fr; gap: clamp(32px, 6vw, 88px); align-items: start; }
 .visita-foto img { aspect-ratio: 3 / 4; object-position: 50% 30%; }
 .status-line { margin-top: 14px; font-weight: 650; color: var(--ink-2); }
@@ -655,7 +655,7 @@ p.err { margin-top: 10px; }
   background: repeating-linear-gradient(90deg, var(--negro) 0 3px, transparent 3px 9px);
 }
 /* Mechones: trazos finos que caen detrás de la cita y de los productos. */
-.cita, .productos { overflow: hidden; }
+.cita, .productos { overflow: clip; }
 .cita::before, .productos::before {
   content: ''; position: absolute; pointer-events: none; z-index: 0;
   width: min(560px, 60vw); aspect-ratio: 560 / 420;
@@ -664,6 +664,46 @@ p.err { margin-top: 10px; }
 .cita::before { top: 0; right: 0; }
 .productos::before { bottom: -40px; left: -60px; transform: scaleX(-1); }
 .cita > .wrap, .productos > .wrap { position: relative; z-index: 1; }
+
+/* ---------- Fondo vivo ----------
+   En vez de un color por sección: una sola pared cálida con tres luces de salón que flotan
+   despacio y cambian de sitio al bajar, y un mechón dorado y rosa que se va dibujando
+   de arriba abajo y pasa por detrás de las chapas negras. */
+main#app { position: relative; isolation: isolate; }
+main#app > section { position: relative; z-index: 1; }
+.fondo { position: fixed; inset: 0; z-index: -2; pointer-events: none; overflow: hidden; background: var(--pared); }
+.luz { position: absolute; border-radius: 50%; filter: blur(60px); opacity: 0.8; will-change: transform; }
+.l1 { width: 46vmax; height: 46vmax; left: -12vmax; top: calc(-8vmax + var(--scroll, 0) * 40vh); background: radial-gradient(circle, #f2c4dc 0%, transparent 68%); animation: flota 26s ease-in-out infinite alternate; }
+.l2 { width: 52vmax; height: 52vmax; right: -16vmax; top: calc(30vh - var(--scroll, 0) * 30vh); background: radial-gradient(circle, #edd49b 0%, transparent 66%); animation: flota 32s ease-in-out -8s infinite alternate-reverse; }
+.l3 { width: 38vmax; height: 38vmax; left: 30vw; bottom: calc(-20vmax + var(--scroll, 0) * 50vh); background: radial-gradient(circle, #e9cdbd 0%, transparent 70%); animation: flota 22s ease-in-out -4s infinite alternate; }
+@keyframes flota {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(6vw, 4vh) scale(1.12); }
+  100% { transform: translate(-4vw, 8vh) scale(0.94); }
+}
+/* El mechón: por encima del fondo, por debajo de las secciones oscuras y del contenido. */
+.hilo { position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; overflow: visible; }
+.hilo path { fill: none; stroke-linecap: round; }
+.hilo-sombra { stroke: rgb(176 134 54 / 0.14); stroke-width: 22; }
+.hilo-oro { stroke: rgb(176 134 54 / 0.7); stroke-width: 3; }
+.hilo-rosa { stroke: rgb(217 127 174 / 0.7); stroke-width: 1.8; }
+/* Las secciones claras dejan ver la pared; su contenido va por encima del mechón. */
+.patri, .cita, .productos, .opiniones, .visita, .faq { background: transparent; }
+.patri > .wrap, .opiniones > .wrap, .visita > .wrap, .faq > .wrap { position: relative; z-index: 1; }
+/* Las chapas negras ya no son bloques rectos: terminan en una onda, como un mechón suelto. */
+.servicios::after, .trabajos::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: -39px; height: 40px; z-index: 1; pointer-events: none;
+  background: var(--negro);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 40' preserveAspectRatio='none'%3E%3Cpath d='M0 0h1200v8c-150 28-300 30-450 12S450-6 300 14 100 40 0 26Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 40' preserveAspectRatio='none'%3E%3Cpath d='M0 0h1200v8c-150 28-300 30-450 12S450-6 300 14 100 40 0 26Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+}
+.trabajos::after { background: #0f0e0d; transform: scaleX(-1); }
+.trabajos { overflow: visible !important; }
+.trabajos .cinta { overflow: hidden; }
+.trabajos .pared-luz { overflow: hidden; }
+.fachada { position: relative; z-index: 1; }
+@media (prefers-reduced-motion: reduce) { .luz { animation: none; } }
+@media (max-width: 760px) { .hilo { opacity: 0.55; } }
 
 /* ---------- El momento: se encienden los focos y se pinta el trazo ---------- */
 @media (prefers-reduced-motion: no-preference) {
