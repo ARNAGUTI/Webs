@@ -626,7 +626,20 @@ function initVisor() {
   const img = $<HTMLImageElement>('[data-visor-img]', visor)!;
   const nombre = $('[data-visor-nombre]', visor)!;
   let i = 0;
-  const pintar = () => { img.src = fotos[i].src; img.alt = fotos[i].alt; img.dataset.k = fotos[i].k; nombre.textContent = fotos[i].nombre; };
+  // La foto anterior no debe asomar: se oculta hasta que la nueva ha cargado.
+  img.addEventListener('load', () => { img.style.opacity = '1'; });
+  const pintar = () => {
+    img.style.opacity = '0';
+    img.removeAttribute('src');
+    img.alt = fotos[i].alt;
+    img.dataset.k = fotos[i].k;
+    nombre.textContent = fotos[i].nombre;
+    img.src = fotos[i].src;
+    if (img.complete && img.naturalWidth) img.style.opacity = '1';
+  };
+  // Las versiones grandes se precargan para que el visor abra al instante.
+  const precargar = () => fotos.forEach((f) => { new Image().src = f.src; });
+  if ('requestIdleCallback' in window) requestIdleCallback(precargar); else setTimeout(precargar, 2000);
   const mover = (d: number) => { i = (i + d + fotos.length) % fotos.length; pintar(); };
   $$<HTMLButtonElement>('[data-zoom]').forEach((b) => b.addEventListener('click', () => {
     i = Number(b.dataset.zoom); pintar(); visor.showModal();

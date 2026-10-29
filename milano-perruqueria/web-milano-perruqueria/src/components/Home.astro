@@ -338,7 +338,6 @@ const cliente = {
   <!-- De nuestras manos: la pared oscura del salón con los trabajos en espejos dorados -->
   <section class="trabajos" id="trabajos" data-pared>
     <div class="pared-luz" aria-hidden="true"></div>
-    <div class="pared-palabras" aria-hidden="true"><span>{t.trabajos.fondo.repeat(4)}</span><span>{t.trabajos.fondo.repeat(4)}</span></div>
     <div class="wrap trabajos-head">
       <h2 class="h2">{t.trabajos.titulo}</h2>
       <p class="intro">{t.trabajos.intro}</p>
@@ -358,7 +357,7 @@ const cliente = {
       </ul>
     </div>
     <div class="wrap cinta-ctrl">
-      <button type="button" class="btn btn-line btn-sm" data-belt-toggle aria-pressed="false" data-pausar={t.trabajos.pausar} data-seguir={t.trabajos.seguir}><span data-belt-label>{t.trabajos.pausar}</span></button>
+      <button type="button" class="btn btn-sm btn-pausa" data-belt-toggle aria-pressed="false" data-pausar={t.trabajos.pausar} data-seguir={t.trabajos.seguir}><span data-belt-label>{t.trabajos.pausar}</span></button>
     </div>
     <dialog class="visor" data-visor aria-label={t.trabajos.titulo} data-fotos={JSON.stringify(trabajosGrandes.map((g) => ({ src: g.grande, alt: t.trabajos.alts[g.key], nombre: t.trabajos.nombres[g.key], k: g.key })))}>
       <figure class="visor-marco">

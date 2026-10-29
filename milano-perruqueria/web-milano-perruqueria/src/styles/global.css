@@ -427,7 +427,7 @@ p.err { margin-top: 10px; }
 .trabajos { padding-block: clamp(72px, 11vw, 128px); background: var(--blanco); }
 /* De nuestras manos: la pared oscura del salón; los trabajos cuelgan en espejos dorados
    y pasan despacio. Un foco sigue al ratón y detrás corren, muy tenues, los nombres del oficio. */
-.trabajos { background: #0f0e0d; color: #fff; overflow: hidden; isolation: isolate; }
+.trabajos { background: #0f0e0d; color: #fff; overflow: hidden; isolation: isolate; padding-bottom: clamp(44px, 6vw, 72px) !important; }
 .trabajos .intro { color: rgb(255 255 255 / 0.7); }
 .trabajos-head { position: relative; z-index: 2; }
 .pared-luz {
@@ -437,13 +437,6 @@ p.err { margin-top: 10px; }
     radial-gradient(80% 60% at 50% 0%, rgb(255 240 215 / 0.06), transparent 70%);
   transition: background-position 0.2s;
 }
-.pared-palabras {
-  position: absolute; left: 0; right: 0; bottom: clamp(70px, 9vw, 110px); z-index: 0; display: flex; width: max-content; white-space: nowrap; pointer-events: none;
-  font-family: var(--serif); font-weight: 600; font-size: clamp(5rem, 13vw, 11rem); line-height: 1; text-transform: uppercase;
-  color: transparent; -webkit-text-stroke: 1px rgb(217 182 108 / 0.16);
-  animation: palabras 90s linear infinite reverse;
-}
-@keyframes palabras { to { transform: translateX(-50%); } }
 .cinta { position: relative; z-index: 1; margin-top: clamp(36px, 5vw, 56px); overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); }
 .cinta-pista { list-style: none; margin: 0; padding: 30px 0 18px; display: flex; align-items: flex-start; gap: clamp(26px, 3vw, 44px); width: max-content; animation: cinta var(--dur, 60s) linear infinite; }
 .cinta:hover .cinta-pista, .cinta.is-paused .cinta-pista { animation-play-state: paused; }
@@ -486,6 +479,9 @@ p.err { margin-top: 10px; }
   box-shadow: inset 0 1px 0 rgb(255 245 210 / 0.7), 0 6px 12px -6px rgb(0 0 0 / 0.8);
 }
 .cinta-ctrl { position: relative; z-index: 2; margin-top: 22px; display: flex; justify-content: flex-end; }
+.trabajos .btn-pausa { color: var(--oro-luz); background: rgb(0 0 0 / 0.35); border: 1px solid rgb(217 182 108 / 0.6); letter-spacing: 0.06em; }
+.trabajos .btn-pausa:hover, .trabajos .btn-pausa:focus-visible { background: var(--oro-luz); color: var(--negro); border-color: var(--oro-luz); }
+.trabajos .btn-pausa[aria-pressed='true'] { background: var(--oro-luz); color: var(--negro); }
 
 /* El visor: la foto en grande dentro de su espejo. */
 .visor { position: fixed; inset: 0; margin: 0; border: 0; padding: 0; background: transparent; max-width: none; max-height: none; width: 100%; height: 100%; overflow: hidden; }
@@ -497,7 +493,7 @@ p.err { margin-top: 10px; }
   box-shadow: inset 0 0 0 1px rgb(255 240 200 / 0.55), 0 40px 80px -30px #000;
   animation: visor 0.45s var(--ease-out);
 }
-.visor-marco img { display: block; max-width: min(86vw, 760px); max-height: 74vh; width: auto; height: auto; }
+.visor-marco img { display: block; transition: opacity 0.25s; max-width: min(86vw, 760px); max-height: 74vh; width: auto; height: auto; }
 .visor-marco img[data-k='balayage'] { aspect-ratio: 1125 / 1300; object-fit: cover; object-position: top; }
 .visor-marco figcaption { font-family: var(--serif); font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; font-size: 0.85rem; color: #2a1d08; }
 @keyframes visor { from { opacity: 0; transform: scale(0.94); } }
@@ -512,9 +508,8 @@ p.err { margin-top: 10px; }
 
 @media (max-width: 860px) {
   .cinta-foto:nth-child(even) { margin-top: 28px; }
-  .pared-palabras { font-size: 4.5rem; bottom: 90px; }
 }
-@media (prefers-reduced-motion: reduce) { .cinta { overflow-x: auto; } .cinta-pista, .pared-palabras { animation: none; } .cinta-ctrl { display: none; } }
+@media (prefers-reduced-motion: reduce) { .cinta { overflow-x: auto; } .cinta-pista { animation: none; } .cinta-ctrl { display: none; } }
 
 /* ---------- Productos ---------- */
 .productos { padding-block: clamp(72px, 11vw, 128px); background: var(--roble-velo); }
