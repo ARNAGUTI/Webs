@@ -575,11 +575,16 @@ function initCinta() {
   // El foco de luz sigue al ratón por la pared.
   const pared = $('[data-pared]');
   if (pared && matchMedia('(hover: hover)').matches) {
+    let ev: PointerEvent | null = null;
     pared.addEventListener('pointermove', (e) => {
-      const r = pared.getBoundingClientRect();
-      pared.style.setProperty('--mx', `${e.clientX - r.left}px`);
-      pared.style.setProperty('--my', `${e.clientY - r.top}px`);
-    });
+      if (!ev) requestAnimationFrame(() => {
+        const r = pared.getBoundingClientRect();
+        pared.style.setProperty('--mx', `${ev!.clientX - r.left}px`);
+        pared.style.setProperty('--my', `${ev!.clientY - r.top}px`);
+        ev = null;
+      });
+      ev = e;
+    }, { passive: true });
   }
   initVisor();
   const btn = $<HTMLButtonElement>('[data-belt-toggle]');
@@ -687,15 +692,19 @@ function initFondo() {
       p.style.transform = i === 2 ? 'translate(14px, 10px)' : '';
     });
     largo = trazos[0].getTotalLength();
+    ultimo = -1;
     trazos.forEach((p) => { p.style.strokeDasharray = `${largo}`; });
     avanzar();
   }
+  let ultimo = -1;
   function avanzar() {
     const total = main!.scrollHeight;
     const progreso = Math.min(1, (window.scrollY + innerHeight * 0.75) / total);
+    const paso = Math.round(progreso * 50) / 50;
+    if (paso === ultimo) return;
+    ultimo = paso;
     const quieto = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    trazos.forEach((p) => { p.style.strokeDashoffset = quieto ? '0' : `${largo * (1 - progreso)}`; });
-    document.documentElement.style.setProperty('--scroll', String(progreso));
+    trazos.forEach((p) => { p.style.strokeDashoffset = quieto ? '0' : `${largo * (1 - paso)}`; });
   }
   let pendiente = false;
   window.addEventListener('scroll', () => {
