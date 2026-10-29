@@ -425,20 +425,96 @@ p.err { margin-top: 10px; }
 
 /* ---------- Trabajos ---------- */
 .trabajos { padding-block: clamp(72px, 11vw, 128px); background: var(--blanco); }
-/* La cinta: las fotos de trabajos pasan solas, como en un escaparate giratorio. */
-.cinta { margin-top: clamp(32px, 5vw, 48px); overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
-.cinta-pista { list-style: none; margin: 0; padding: 6px 0; display: flex; gap: clamp(12px, 1.6vw, 20px); width: max-content; animation: cinta var(--dur, 60s) linear infinite; }
+/* De nuestras manos: la pared oscura del salón; los trabajos cuelgan en espejos dorados
+   y pasan despacio. Un foco sigue al ratón y detrás corren, muy tenues, los nombres del oficio. */
+.trabajos { background: #0f0e0d; color: #fff; overflow: hidden; isolation: isolate; }
+.trabajos .intro { color: rgb(255 255 255 / 0.7); }
+.trabajos-head { position: relative; z-index: 2; }
+.pared-luz {
+  position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(520px 420px at var(--mx, 70%) var(--my, 45%), rgb(255 226 180 / 0.13), transparent 70%),
+    radial-gradient(80% 60% at 50% 0%, rgb(255 240 215 / 0.06), transparent 70%);
+  transition: background-position 0.2s;
+}
+.pared-palabras {
+  position: absolute; left: 0; right: 0; bottom: clamp(70px, 9vw, 110px); z-index: 0; display: flex; width: max-content; white-space: nowrap; pointer-events: none;
+  font-family: var(--serif); font-weight: 600; font-size: clamp(5rem, 13vw, 11rem); line-height: 1; text-transform: uppercase;
+  color: transparent; -webkit-text-stroke: 1px rgb(217 182 108 / 0.16);
+  animation: palabras 90s linear infinite reverse;
+}
+@keyframes palabras { to { transform: translateX(-50%); } }
+.cinta { position: relative; z-index: 1; margin-top: clamp(36px, 5vw, 56px); overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); }
+.cinta-pista { list-style: none; margin: 0; padding: 30px 0 18px; display: flex; align-items: flex-start; gap: clamp(26px, 3vw, 44px); width: max-content; animation: cinta var(--dur, 60s) linear infinite; }
 .cinta:hover .cinta-pista, .cinta.is-paused .cinta-pista { animation-play-state: paused; }
-@keyframes cinta { to { transform: translateX(calc(-50% - clamp(6px, 0.8vw, 10px))); } }
-.cinta-foto { flex: none; width: clamp(220px, 26vw, 340px); aspect-ratio: 4 / 5; overflow: hidden; position: relative; background: var(--pared); }
-.cinta-foto::after { content: ''; position: absolute; inset: 7px; border: 1px solid rgb(217 182 108 / 0.75); pointer-events: none; }
-.cinta-foto img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s var(--ease-out); }
-.cinta-foto:hover img { transform: scale(1.05); }
+@keyframes cinta { to { transform: translateX(calc(-50% - clamp(13px, 1.5vw, 22px))); } }
+.cinta-foto { flex: none; width: clamp(220px, 24vw, 320px); display: grid; justify-items: center; gap: 16px; position: relative; }
+/* Colgados a distintas alturas, con su cordón, como en la pared. */
+.cinta-foto:nth-child(even) { margin-top: 46px; }
+.cinta-foto::before { content: ''; position: absolute; top: -30px; left: 50%; width: 1px; height: 30px; background: linear-gradient(rgb(217 182 108 / 0), rgb(217 182 108 / 0.7)); }
+.espejo {
+  display: block; width: 100%; padding: 13px; border: 0; cursor: zoom-in; position: relative;
+  /* El marco dorado: canto claro, cuerpo y sombra, como los espejos del salón. */
+  background:
+    linear-gradient(135deg, #f3dc9c 0%, #b8862f 22%, #7a5516 45%, #d8b061 62%, #8c6420 82%, #e9cf86 100%);
+  box-shadow: inset 0 0 0 1px rgb(255 240 200 / 0.55), inset 0 0 0 4px rgb(90 60 15 / 0.45), 0 26px 40px -22px rgb(0 0 0 / 0.9);
+  transform: rotate(var(--giro, 0deg)); transition: transform 0.5s var(--ease-out), box-shadow 0.5s;
+}
+.cinta-foto:nth-child(3n) .espejo { --giro: -1.2deg; }
+.cinta-foto:nth-child(3n + 1) .espejo { --giro: 0.8deg; }
+.espejo::before { content: ''; position: absolute; inset: 6px; border: 1px solid rgb(60 40 10 / 0.55); pointer-events: none; }
+.espejo-cristal { display: block; aspect-ratio: 4 / 5; overflow: hidden; position: relative; background: #222; box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.6); }
+.espejo-cristal::after {
+  /* El brillo del cristal, que se desliza al pasar el ratón. */
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(115deg, transparent 30%, rgb(255 255 255 / 0.16) 45%, transparent 60%);
+  transform: translateX(-60%); transition: transform 0.9s var(--ease-out);
+}
+.espejo-cristal img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.9s var(--ease-out); }
+.espejo:hover { --giro: 0deg; transform: rotate(0) translateY(-6px) scale(1.03); box-shadow: inset 0 0 0 1px rgb(255 240 200 / 0.7), inset 0 0 0 4px rgb(90 60 15 / 0.45), 0 34px 50px -20px rgb(0 0 0 / 0.95), 0 0 60px -10px rgb(255 214 140 / 0.25); }
+.espejo:hover .espejo-cristal::after { transform: translateX(60%); }
+.espejo:hover img { transform: scale(1.06); }
+.espejo:focus-visible { outline: 3px solid var(--rosa-luz); outline-offset: 5px; }
 /* La foto del balayage trae un icono de Instagram abajo a la izquierda: queda fuera del encuadre. */
 .cinta-foto.f-balayage img { transform: scale(1.16); transform-origin: 75% 10%; }
-.cinta-foto.f-balayage:hover img { transform: scale(1.2); }
-.cinta-ctrl { margin-top: 18px; display: flex; justify-content: flex-end; }
-@media (prefers-reduced-motion: reduce) { .cinta { overflow-x: auto; } .cinta-pista { animation: none; } .cinta-ctrl { display: none; } }
+.cinta-foto.f-balayage .espejo:hover img { transform: scale(1.2); }
+/* La placa de latón con el nombre del trabajo. */
+.placa {
+  font-family: var(--serif); font-weight: 600; font-size: 0.8rem; letter-spacing: 0.16em; text-transform: uppercase;
+  color: #2a1d08; padding: 6px 14px; border-radius: 2px;
+  background: linear-gradient(180deg, #ecd28f, #c39a48 55%, #a87f30);
+  box-shadow: inset 0 1px 0 rgb(255 245 210 / 0.7), 0 6px 12px -6px rgb(0 0 0 / 0.8);
+}
+.cinta-ctrl { position: relative; z-index: 2; margin-top: 22px; display: flex; justify-content: flex-end; }
+
+/* El visor: la foto en grande dentro de su espejo. */
+.visor { position: fixed; inset: 0; margin: 0; border: 0; padding: 0; background: transparent; max-width: none; max-height: none; width: 100%; height: 100%; overflow: hidden; }
+.visor[open] { display: grid; place-items: center; }
+.visor::backdrop { background: rgb(10 9 8 / 0.92); backdrop-filter: blur(4px); }
+.visor-marco {
+  margin: 0; padding: 16px; display: grid; gap: 14px; justify-items: center;
+  background: linear-gradient(135deg, #f3dc9c 0%, #b8862f 22%, #7a5516 45%, #d8b061 62%, #8c6420 82%, #e9cf86 100%);
+  box-shadow: inset 0 0 0 1px rgb(255 240 200 / 0.55), 0 40px 80px -30px #000;
+  animation: visor 0.45s var(--ease-out);
+}
+.visor-marco img { display: block; max-width: min(86vw, 760px); max-height: 74vh; width: auto; height: auto; }
+.visor-marco img[data-k='balayage'] { aspect-ratio: 1125 / 1300; object-fit: cover; object-position: top; }
+.visor-marco figcaption { font-family: var(--serif); font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; font-size: 0.85rem; color: #2a1d08; }
+@keyframes visor { from { opacity: 0; transform: scale(0.94); } }
+.visor-btn, .visor-cerrar {
+  position: fixed; border: 1px solid rgb(255 255 255 / 0.4); background: rgb(20 20 20 / 0.6); color: #fff; cursor: pointer;
+}
+.visor-btn { top: 50%; width: 52px; height: 52px; margin-top: -26px; border-radius: 50%; display: grid; place-items: center; }
+.visor-prev { left: max(12px, 3vw); }
+.visor-next { right: max(12px, 3vw); }
+.visor-cerrar { top: 18px; right: 18px; padding: 10px 16px; border-radius: var(--radius); font-weight: 650; }
+.visor-btn:hover, .visor-cerrar:hover { background: #fff; color: var(--ink); }
+
+@media (max-width: 860px) {
+  .cinta-foto:nth-child(even) { margin-top: 28px; }
+  .pared-palabras { font-size: 4.5rem; bottom: 90px; }
+}
+@media (prefers-reduced-motion: reduce) { .cinta { overflow-x: auto; } .cinta-pista, .pared-palabras { animation: none; } .cinta-ctrl { display: none; } }
 
 /* ---------- Productos ---------- */
 .productos { padding-block: clamp(72px, 11vw, 128px); background: var(--roble-velo); }

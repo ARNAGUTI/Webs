@@ -35,6 +35,11 @@ const trabajos = [
   { key: 'ondas', src: imgOndas, pos: '50% 35%' },
 ] as const;
 
+// Versión grande de cada trabajo para el visor.
+const trabajosGrandes = await Promise.all(
+  trabajos.map(async (g) => ({ ...g, grande: (await getImage({ src: g.src, width: 1200, format: 'webp' })).src })),
+);
+
 const ordenDias = [1, 2, 3, 4, 5, 6, 0];
 const tramosTexto = (d: number) => horario[d].map(([a, b]) => `${a} – ${b}`).join(' · ');
 const cap = (x: string) => x.charAt(0).toUpperCase() + x.slice(1);
@@ -330,24 +335,40 @@ const cliente = {
     </div>
   </section>
 
-  <!-- Trabajos reales -->
-  <section class="trabajos" id="trabajos">
-    <div class="wrap">
+  <!-- De nuestras manos: la pared oscura del salón con los trabajos en espejos dorados -->
+  <section class="trabajos" id="trabajos" data-pared>
+    <div class="pared-luz" aria-hidden="true"></div>
+    <div class="pared-palabras" aria-hidden="true"><span>{t.trabajos.fondo.repeat(4)}</span><span>{t.trabajos.fondo.repeat(4)}</span></div>
+    <div class="wrap trabajos-head">
       <h2 class="h2">{t.trabajos.titulo}</h2>
       <p class="intro">{t.trabajos.intro}</p>
     </div>
     <div class="cinta" data-belt>
       <ul class="cinta-pista" role="list" data-belt-track>
-        {[...trabajos, ...trabajos].map((g, i) => (
-          <li class={`cinta-foto f-${g.key}`} aria-hidden={i >= trabajos.length ? 'true' : undefined}>
-            <Image src={g.src} alt={i >= trabajos.length ? '' : t.trabajos.alts[g.key]} widths={[360, 540, 720]} sizes="(max-width: 860px) 62vw, 340px" style={`object-position:${g.pos}`} />
+        {[...trabajosGrandes, ...trabajosGrandes].map((g, i) => (
+          <li class={`cinta-foto f-${g.key}`} aria-hidden={i >= trabajosGrandes.length ? 'true' : undefined}>
+            <button type="button" class="espejo" data-zoom={i % trabajosGrandes.length} tabindex={i >= trabajosGrandes.length ? -1 : undefined}>
+              <span class="espejo-cristal">
+                <Image src={g.src} alt={i >= trabajosGrandes.length ? '' : t.trabajos.alts[g.key]} widths={[360, 540, 720]} sizes="(max-width: 860px) 62vw, 320px" style={`object-position:${g.pos}`} />
+              </span>
+            </button>
+            <span class="placa">{t.trabajos.nombres[g.key]}</span>
           </li>
         ))}
       </ul>
     </div>
     <div class="wrap cinta-ctrl">
-      <button type="button" class="btn btn-line-dark btn-sm" data-belt-toggle aria-pressed="false" data-pausar={t.trabajos.pausar} data-seguir={t.trabajos.seguir}><span data-belt-label>{t.trabajos.pausar}</span></button>
+      <button type="button" class="btn btn-line btn-sm" data-belt-toggle aria-pressed="false" data-pausar={t.trabajos.pausar} data-seguir={t.trabajos.seguir}><span data-belt-label>{t.trabajos.pausar}</span></button>
     </div>
+    <dialog class="visor" data-visor aria-label={t.trabajos.titulo} data-fotos={JSON.stringify(trabajosGrandes.map((g) => ({ src: g.grande, alt: t.trabajos.alts[g.key], nombre: t.trabajos.nombres[g.key], k: g.key })))}>
+      <figure class="visor-marco">
+        <img data-visor-img src="" alt="" />
+        <figcaption data-visor-nombre></figcaption>
+      </figure>
+      <button type="button" class="visor-btn visor-prev" data-visor-prev aria-label={t.trabajos.anterior}><Icon name="arrow" size={22} class="flip" /></button>
+      <button type="button" class="visor-btn visor-next" data-visor-next aria-label={t.trabajos.siguiente}><Icon name="arrow" size={22} /></button>
+      <button type="button" class="visor-cerrar" data-visor-cerrar>{t.trabajos.cerrar} ✕</button>
+    </dialog>
   </section>
 
   <!-- Productos -->

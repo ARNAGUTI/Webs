@@ -148,8 +148,19 @@ const es = {
     comoFunciona: 'Las horas mostradas son las de apertura; el salón confirma la disponibilidad.',
   },
   trabajos: {
-    titulo: 'Salido de sus manos',
-    intro: 'Trabajos hechos en el salón.',
+    titulo: 'De nuestras manos',
+    intro: 'Cortes, color y peinados hechos en el salón por nuestro equipo. Pulsa una foto para verla en grande.',
+    fondo: 'Corte · Color · Balayage · Trenzas · Peinados · ',
+    cerrar: 'Cerrar',
+    anterior: 'Foto anterior',
+    siguiente: 'Foto siguiente',
+    nombres: {
+      balayage: 'Balayage rubio',
+      castano: 'Corte en capas',
+      ondas: 'Ondas largas',
+      trenza: 'Trenza de raíz',
+      'trenzas-nuca': 'Trenzas y nuca',
+    },
     pausar: 'Pausar',
     seguir: 'Seguir',
     alts: {
@@ -367,8 +378,19 @@ const ca: typeof es = {
     comoFunciona: 'Les hores que es mostren són les d’obertura; el saló confirma la disponibilitat.',
   },
   trabajos: {
-    titulo: 'Sortit de les seves mans',
-    intro: 'Treballs fets al saló.',
+    titulo: 'De les nostres mans',
+    intro: 'Talls, color i pentinats fets al saló pel nostre equip. Prem una foto per veure-la en gran.',
+    fondo: 'Tall · Color · Balayage · Trenes · Pentinats · ',
+    cerrar: 'Tancar',
+    anterior: 'Foto anterior',
+    siguiente: 'Foto següent',
+    nombres: {
+      balayage: 'Balayage ros',
+      castano: 'Tall en capes',
+      ondas: 'Ones llargues',
+      trenza: 'Trena d’arrel',
+      'trenzas-nuca': 'Trenes i clatell',
+    },
     pausar: 'Pausa',
     seguir: 'Continua',
     alts: {

@@ -571,6 +571,16 @@ function initCinta() {
   ajustar();
   window.addEventListener('resize', ajustar, { passive: true });
   $$('img', track).forEach((img) => img.addEventListener('load', ajustar, { once: true }));
+  // El foco de luz sigue al ratón por la pared.
+  const pared = $('[data-pared]');
+  if (pared && matchMedia('(hover: hover)').matches) {
+    pared.addEventListener('pointermove', (e) => {
+      const r = pared.getBoundingClientRect();
+      pared.style.setProperty('--mx', `${e.clientX - r.left}px`);
+      pared.style.setProperty('--my', `${e.clientY - r.top}px`);
+    });
+  }
+  initVisor();
   const btn = $<HTMLButtonElement>('[data-belt-toggle]');
   const label = $('[data-belt-label]');
   btn?.addEventListener('click', () => {
@@ -606,4 +616,25 @@ function initTaco() {
   taco.addEventListener('touchend', (e) => { const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 40) mover(dx < 0 ? 1 : -1); });
   taco.addEventListener('keydown', (e) => { if (e.key === 'ArrowRight') mover(1); if (e.key === 'ArrowLeft') mover(-1); });
   pintar();
+}
+
+// ---------- Visor: el trabajo en grande ----------
+function initVisor() {
+  const visor = $<HTMLDialogElement>('[data-visor]');
+  if (!visor || typeof visor.showModal !== 'function') return;
+  const fotos: { src: string; alt: string; nombre: string; k: string }[] = JSON.parse(visor.dataset.fotos!);
+  const img = $<HTMLImageElement>('[data-visor-img]', visor)!;
+  const nombre = $('[data-visor-nombre]', visor)!;
+  let i = 0;
+  const pintar = () => { img.src = fotos[i].src; img.alt = fotos[i].alt; img.dataset.k = fotos[i].k; nombre.textContent = fotos[i].nombre; };
+  const mover = (d: number) => { i = (i + d + fotos.length) % fotos.length; pintar(); };
+  $$<HTMLButtonElement>('[data-zoom]').forEach((b) => b.addEventListener('click', () => {
+    i = Number(b.dataset.zoom); pintar(); visor.showModal();
+  }));
+  $('[data-visor-prev]', visor)?.addEventListener('click', () => mover(-1));
+  $('[data-visor-next]', visor)?.addEventListener('click', () => mover(1));
+  $('[data-visor-cerrar]', visor)?.addEventListener('click', () => visor.close());
+  // Pulsar fuera de la foto cierra.
+  visor.addEventListener('click', (e) => { if (e.target === visor) visor.close(); });
+  visor.addEventListener('keydown', (e) => { if (e.key === 'ArrowRight') mover(1); if (e.key === 'ArrowLeft') mover(-1); });
 }
