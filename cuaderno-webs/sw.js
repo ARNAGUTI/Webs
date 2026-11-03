@@ -1,5 +1,5 @@
 /* Guarda la app en el dispositivo para que abra sin conexión. Los datos van aparte (store.js). */
-const VERSION = "cw-v1";
+const VERSION = "cw-v2";
 const APP = ["./", "index.html", "store.js", "config.js", "manifest.webmanifest", "icons/icon-192.png", "icons/apple-touch-icon.png",
   "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"];
 self.addEventListener("install", e => { e.waitUntil(caches.open(VERSION).then(c => Promise.all(APP.map(u => c.add(u).catch(() => {})))).then(() => self.skipWaiting())); });
