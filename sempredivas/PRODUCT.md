@@ -23,27 +23,30 @@ Que la clienta vea el salón, sus servicios y su horario, y pida cita (servicio,
 
 ## Positioning
 
-Peluquería de barrio con 4,8★ y 173 reseñas en Google (nº 15 de 229 en Badalona según PeluqueriaMaster). Especialidades: peinado, color, corte, tratamientos, keratina. Abre siete días menos el lunes, incluido domingo por la mañana.
+Peluquería y estética de barrio, llevada por dos hermanas, con 4,8★ y 188 reseñas en Google (nº 15 de 229 en Badalona según PeluqueriaMaster). Lo que más valoran: trato cercano, café al llegar, masaje capilar en el lavado. Fuertes según sus fotos: color cobrizo, alisados, trenzas y peinados de fiesta (también a niñas). Abre de martes a domingo, incluido domingo por la mañana.
 
 ## Operating Context
 
 - Sin web propia: solo un blog antiguo en Blogspot (sempredivas32.blogspot.com).
 - Fresha: ficha automática NO reclamada (/lvp/), sin reserva online, con "Llamar para reservar" y un carrusel de "reservar online en establecimientos cercanos".
-- Teléfono 602 85 29 01 (móvil: probablemente con WhatsApp, pendiente de confirmar).
+- Móvil 602 85 29 01 (en el vinilo del escaparate; probablemente con WhatsApp, pendiente de confirmar). Fijo 931 06 07 75 (rótulo). Instagram @sempredivas32.
+- **Google Maps la marca "Cerrado temporalmente"** (noviembre 2026), aunque tiene fotos de febrero de 2026. Confirmar antes de ofrecer la web.
 - Idiomas: español y catalán.
 
 ## Capabilities and Constraints
 
 - Dirección: Av. Bufalà, 21, 08915 Badalona.
-- Horario (Fresha): L cerrado, M–V 9–20, S 9–17, D 9–14.
-- Precios y duraciones: de ejemplo, en un solo archivo.
+- Horario: L cerrado, M–S 9–20, D 9–14 (Fresha da el sábado 9–17; pendiente de confirmar).
+- Precios reales solo de tres servicios (escaparate): lavar y cortar 14,50 €, teñir y peinar 25 €, cejas con hilo 6 €. El resto, "consultar". Duraciones orientativas.
 - SEO local: schema HairSalon, hreflang es/ca, sitemap.
 
 ## Brand Commitments
 
-Nombre "SempreDivas" (siempre divinas). Sin logo conocido: identidad nueva.
+Nombre "Sempre Divas" con logotipo en letra caligráfica (blanca en el rótulo negro, dorada en la pared de mármol) y "PERRUQUERIA & ESTÈTICA" en versalitas. Medallones ovalados con perfil de mujer. La web sigue esa identidad real (ver DESIGN.md y `referencias/`).
 
 ## Evidence on Hand
 
-- 4,8★ con 173 reseñas en Google (PeluqueriaMaster, abril 2026).
+- 4,8★ con 188 reseñas en Google (noviembre 2026).
+- Reseñas reales con nombre de pila en esopiniones.com (Yolanda, Isa, Montserrat, Claudia, Mireia, Pepa…).
+- 9 fotos reales del salón en `referencias/` (de Google Maps): fachada, interior y trabajos. Pedir permiso para usarlas.
 - Servicio citado en Fresha: tratamiento de keratina. Especialidades en PeluqueriaMaster: peinado, color, corte, tratamientos.

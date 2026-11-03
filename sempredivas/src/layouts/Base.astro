@@ -1,5 +1,9 @@
 ---
-import '@fontsource-variable/bricolage-grotesque/standard.css';
+import '@fontsource-variable/dancing-script/wght.css';
+import '@fontsource-variable/cormorant/wght.css';
+import '@fontsource-variable/cormorant/wght-italic.css';
+import '@fontsource/cormorant-sc/latin-600.css';
+import '@fontsource/cormorant-sc/latin-ext-600.css';
 import '@fontsource-variable/hanken-grotesk/wght.css';
 import '../styles/global.css';
 import { ui, type Lang } from '../i18n/ui';
@@ -12,7 +16,7 @@ const site = Astro.site!;
 const urlEs = new URL('/', site).href;
 const urlCa = new URL('/ca/', site).href;
 const canonical = lang === 'es' ? urlEs : urlCa;
-const ogSrc = new URL(foto('balayage', 1200, 630), site).href;
+const ogSrc = new URL(foto('trenzas-perlas'), site).href;
 
 const diasSchema = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const openingHoursSpecification = Object.entries(horario).flatMap(([d, tramos]) =>
@@ -42,6 +46,7 @@ const jsonLd = {
     addressCountry: negocio.direccion.pais,
   },
   hasMap: negocio.mapsUrl,
+  sameAs: [`https://www.instagram.com/${negocio.instagram}/`],
   areaServed: 'Badalona',
   openingHoursSpecification,
   inLanguage: t.htmlLang,
@@ -59,8 +64,7 @@ const jsonLd = {
     <link rel="alternate" hreflang="es" href={urlEs} />
     <link rel="alternate" hreflang="ca" href={urlCa} />
     <link rel="alternate" hreflang="x-default" href={urlEs} />
-    <meta name="theme-color" content="#3a0a24" />
-    <link rel="preconnect" href="https://images.unsplash.com" />
+    <meta name="theme-color" content="#2c2b29" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content={lang === 'es' ? 'es_ES' : 'ca_ES'} />

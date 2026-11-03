@@ -1,7 +1,8 @@
 ---
 import Icon from './Icon.astro';
+import Pic from './Pic.astro';
 import { ui, type Lang } from '../i18n/ui';
-import { negocio, horario, servicios, foto, srcset, type FotoId, type Grupo } from '../data/negocio';
+import { negocio, horario, servicios, grupos, resenas, precioTexto, type FotoId } from '../data/negocio';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -10,14 +11,13 @@ const other: Lang = lang === 'es' ? 'ca' : 'es';
 const hrefFor = (l: Lang) => (l === 'es' ? '/' : '/ca/');
 const tel = `tel:${negocio.telefonoE164}`;
 const wa = `https://wa.me/${negocio.whatsapp}`;
+const ig = `https://www.instagram.com/${negocio.instagram}/`;
 const v = negocio.valoracion;
 const fill = (tpl: string, vars: Record<string, string | number>) => tpl.replace(/\{(\w)\}/g, (_, k) => String(vars[k] ?? ''));
+const precio = (p: number | null) => precioTexto(p, lang);
 
-// La tira de fotomatón de la portada: cuatro looks del salón.
-const tira: FotoId[] = ['balayage', 'color', 'liso', 'recogido'];
-// Hoja de contactos de Trabajos.
-const galeria: FotoId[] = ['color', 'balayage', 'tijera', 'liso', 'secador', 'recogido', 'melena', 'salon', 'rizos', 'sillones'];
-const grupos: Grupo[] = ['corte', 'color', 'tratamiento'];
+// Galería: trabajos reales del salón.
+const galeria: FotoId[] = ['antes-despues', 'lazo', 'alisado', 'semirecogido', 'trenzas-nina', 'espejo-ondas'];
 const pasos = ['servicio', 'dia', 'hora', 'datos'] as const;
 
 const ordenDias = [1, 2, 3, 4, 5, 6, 0];
@@ -39,7 +39,7 @@ const cliente = {
   servicios: servicios.map((s) => ({ id: s.id, min: s.min, nombre: t.servicios.nombres[s.id] })),
   whatsapp: negocio.whatsapp,
   negocio: { nombre: negocio.nombre, direccion: `${negocio.direccion.calle}, ${negocio.direccion.cp} ${negocio.direccion.ciudad}` },
-  t: { dias: t.dias, diasCortos: t.diasCortos, meses: t.meses, hoy: t.hoy, manana: t.manana, cita: t.cita, visita: t.visita, sello: t.hero.sello },
+  t: { dias: t.dias, diasCortos: t.diasCortos, meses: t.meses, hoy: t.hoy, manana: t.manana, cita: t.cita, visita: t.visita },
 };
 ---
 <div id="app" data-cliente={JSON.stringify(cliente)}>
@@ -47,7 +47,7 @@ const cliente = {
 
   <header class="top" data-top>
     <div class="top-in wrap">
-      <a class="brand" href={hrefFor(lang)}>Sempre<span>Divas</span></a>
+      <a class="brand" href={hrefFor(lang)} aria-label="SempreDivas">Sempre Divas</a>
       <nav class="nav" aria-label="Menú">
         <a href="#cita">{t.nav.cita}</a>
         <a href="#servicios">{t.nav.servicios}</a>
@@ -64,14 +64,15 @@ const cliente = {
   </header>
 
   <main id="main">
-    <!-- Portada: la cabina de fotomatón, con la cortina abierta -->
+    <!-- Portada: el rótulo negro de la fachada y el espejo ovalado del salón -->
     <section class="hero" aria-labelledby="hero-title">
       <div class="hero-in wrap">
         <div class="hero-copy">
-          <h1 id="hero-title" class="wordmark"><span>Sempre</span><span>Divas</span><span class="sr"> · {t.pie.hecho}</span></h1>
+          <h1 id="hero-title" class="wordmark">Sempre Divas<span class="sr"> · {t.pie.hecho}</span></h1>
+          <p class="oficio" aria-hidden="true"><span class="orn"></span>{t.oficio}<span class="orn"></span></p>
           <p class="lead">{t.hero.lema}</p>
           <div class="hero-cta">
-            <a class="btn btn-lamp" href="#cita"><Icon name="calendar" size={20} />{t.hero.cta}</a>
+            <a class="btn btn-gold" href="#cita"><Icon name="calendar" size={20} />{t.hero.cta}</a>
             <a class="btn btn-line" href={wa} target="_blank" rel="noopener"><Icon name="chat" size={20} />{t.whatsapp}</a>
           </div>
           <ul class="hero-facts">
@@ -85,20 +86,38 @@ const cliente = {
           </ul>
         </div>
 
-        <figure class="strip" aria-label={t.hero.tira} data-strip>
-          {tira.map((id, i) => (
-            <div class="frame" style={`--i:${i}`}>
-              <img src={foto(id, 520, 400)} srcset={srcset(id, [320, 520, 760], 400 / 520)} sizes="(max-width: 760px) 40vw, 260px"
-                alt={t.trabajos.alts[id]} width="520" height="400" loading="eager" decoding="async" />
-            </div>
-          ))}
-          <figcaption class="stamp" data-stamp>SempreDivas · {t.hero.sello}</figcaption>
+        <figure class="mirror">
+          <div class="mirror-glass">
+            <Pic id="trenzas-perlas" alt={t.hero.espejo} sizes="(max-width: 760px) 70vw, 400px" eager />
+          </div>
+          <div class="medallion" aria-hidden="true">
+            <Pic id="lazo" alt="" sizes="160px" eager />
+          </div>
         </figure>
       </div>
-      <div class="flash" aria-hidden="true"></div>
     </section>
 
-    <!-- Reserva: cada paso revela una foto de la tira -->
+    <!-- La casa: las dos hermanas -->
+    <section class="casa" aria-labelledby="casa-title">
+      <div class="wrap casa-in">
+        <figure class="casa-foto">
+          <Pic id="logo-marmol" alt={t.casa.foto} sizes="(max-width: 760px) 90vw, 380px" />
+        </figure>
+        <div class="casa-copy">
+          <h2 id="casa-title">{t.casa.titulo}</h2>
+          <p class="casa-text">{t.casa.texto}</p>
+          <ul class="gestos">
+            {t.casa.gestos.map((g) => <li>{g}</li>)}
+          </ul>
+          <blockquote class="casa-quote" lang="es">
+            <p>“{resenas[1].t}”</p>
+            <footer>{resenas[1].n}</footer>
+          </blockquote>
+        </div>
+      </div>
+    </section>
+
+    <!-- Reserva -->
     <section id="cita" class="book" aria-labelledby="cita-title">
       <div class="wrap book-in">
         <div class="book-head">
@@ -112,13 +131,13 @@ const cliente = {
               <legend><span class="st-n" aria-hidden="true">1</span>{t.cita.pasos.servicio}</legend>
               <div class="svc-pick">
                 {grupos.map((g) => (
-                  <div class="svc-group">
-                    <p class="svc-group-name">{t.servicios.grupos[g]}</p>
+                  <div class="svc-group" role="group" aria-label={t.servicios.grupos[g]}>
+                    <p class="svc-group-name" aria-hidden="true">{t.servicios.grupos[g]}</p>
                     {servicios.filter((s) => s.grupo === g).map((s) => (
                       <label class="svc">
                         <input type="radio" name="servicio" value={s.id} />
                         <span class="svc-name">{t.servicios.nombres[s.id]}</span>
-                        <span class="svc-meta">{t.cita.desde} <b>{s.precio} €</b> · {s.min} {t.cita.min}</span>
+                        <span class="svc-meta">{precio(s.precio) ? <b>{precio(s.precio)}</b> : t.cita.consultar}</span>
                       </label>
                     ))}
                   </div>
@@ -163,8 +182,9 @@ const cliente = {
             </fieldset>
           </div>
 
-          <!-- Tu tira: se revela foto a foto y lleva el botón de enviar -->
+          <!-- Tu cita: la tarjeta negra del salón, con el botón de enviar -->
           <aside class="mystrip" data-ticket aria-label={t.cita.tuTira}>
+            <p class="ticket-title" aria-hidden="true">{t.cita.tuTira}</p>
             <ol class="mystrip-frames">
               {pasos.map((p, i) => (
                 <li class="shot" data-shot={p} style={`--i:${i}`}>
@@ -175,7 +195,7 @@ const cliente = {
             </ol>
             <div class="mystrip-foot">
               <p class="summary is-empty" data-summary aria-live="polite">{t.cita.resumenVacio}</p>
-              <button class="btn btn-lamp btn-send" type="submit"><Icon name="chat" size={20} /><span>{t.cita.enviar}</span></button>
+              <button class="btn btn-gold btn-send" type="submit"><Icon name="chat" size={20} /><span>{t.cita.enviar}</span></button>
               <a class="call-alt" href={tel}>{t.cita.llamarMejor} {negocio.telefono}</a>
             </div>
           </aside>
@@ -186,7 +206,7 @@ const cliente = {
           <p class="ok-summary" data-ok-summary></p>
           <p>{t.cita.okTexto}</p>
           <div class="ok-actions">
-            <button type="button" class="btn btn-lamp" data-ics><Icon name="calendar" size={20} />{t.cita.calendario}</button>
+            <button type="button" class="btn btn-gold" data-ics><Icon name="calendar" size={20} />{t.cita.calendario}</button>
             <a class="btn btn-line" data-reopen href={wa} target="_blank" rel="noopener"><Icon name="chat" size={20} />{t.cita.abrirDeNuevo}</a>
             <button type="button" class="linkish" data-reset>{t.cita.otra}</button>
           </div>
@@ -194,11 +214,12 @@ const cliente = {
       </div>
     </section>
 
-    <!-- Precios: la carta impresa del salón -->
+    <!-- Precios: la carta del escaparate -->
     <section id="servicios" class="prices" aria-labelledby="precios-title">
       <div class="wrap">
-        <div class="sec-head">
+        <div class="sec-head sec-head-center">
           <h2 id="precios-title">{t.servicios.titulo}</h2>
+          <p class="orn-line" aria-hidden="true"><span class="orn"></span><span class="orn"></span></p>
           <p>{t.servicios.intro}</p>
         </div>
         <div class="price-cols">
@@ -208,12 +229,11 @@ const cliente = {
               <ul>
                 {servicios.filter((s) => s.grupo === g).map((s) => (
                   <li>
-                    <a href="#cita" data-pick={s.id} class="price-row">
+                    <a href="#cita" data-pick={s.id} class:list={['price-row', { 'has-price': s.precio != null }]}>
                       <span class="pr-name">{t.servicios.nombres[s.id]}</span>
                       <span class="pr-dots" aria-hidden="true"></span>
-                      <span class="pr-price"><small>{t.cita.desde}</small> {s.precio} €</span>
-                      <span class="pr-detail">{t.servicios.detalles[s.id]} · {s.min} {t.cita.min}</span>
-                      <span class="pr-go">{t.servicios.reservar}<Icon name="arrow" size={16} /></span>
+                      <span class="pr-price">{precio(s.precio) ?? t.servicios.consultar}</span>
+                      <span class="pr-go">{t.servicios.reservar}<Icon name="arrow" size={15} /></span>
                     </a>
                   </li>
                 ))}
@@ -221,23 +241,49 @@ const cliente = {
             </div>
           ))}
         </div>
-        <p class="note">{t.servicios.ejemplo}</p>
+        <p class="note note-center">{t.servicios.ejemplo}</p>
       </div>
     </section>
 
-    <!-- Trabajos: hoja de contactos -->
+    <!-- Trabajos: la pared de papel pintado negro y oro -->
     <section id="trabajos" class="works" aria-labelledby="trabajos-title">
       <div class="wrap">
-        <div class="sec-head">
+        <div class="sec-head works-head">
           <h2 id="trabajos-title">{t.trabajos.titulo}</h2>
           <p>{t.trabajos.intro}</p>
+          <a class="btn btn-line btn-sm" href={ig} target="_blank" rel="noopener"><Icon name="instagram" size={18} />{t.trabajos.instagram}</a>
         </div>
-        <ul class="sheet">
+        <ul class="gallery">
           {galeria.map((id, i) => (
-            <li class={`sheet-item sheet-${i}`}>
-              <img src={foto(id, 600, 750)} srcset={srcset(id, [360, 600, 900], 750 / 600)} sizes="(max-width: 760px) 50vw, 22vw"
-                alt={t.trabajos.alts[id]} width="600" height="750" loading="lazy" decoding="async" />
-              <span class="edge" aria-hidden="true">SD {String(i + 1).padStart(2, '0')}</span>
+            <li class={`g-item g-${i}`}>
+              <Pic id={id} alt={t.trabajos.alts[id]} sizes="(max-width: 760px) 50vw, 25vw" />
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <!-- Reseñas reales -->
+    <section class="reviews" aria-labelledby="resenas-title">
+      <div class="wrap">
+        <div class="reviews-head">
+          <h2 id="resenas-title">{t.resenas.titulo}</h2>
+          <a class="rev-score" href={negocio.mapsUrl} target="_blank" rel="noopener">
+            <span class="rev-num">{v.nota}</span>
+            <span class="rev-meta">
+              <span class="stars" aria-hidden="true">{[0, 1, 2, 3, 4].map(() => <Icon name="star" size={16} />)}</span>
+              <span>{fill(t.resenas.media, { x: v.nota, n: v.resenas })}</span>
+              <span class="rev-link">{t.resenas.ver}<Icon name="arrow" size={15} /></span>
+            </span>
+          </a>
+        </div>
+        <ul class="quotes">
+          {resenas.filter((_, i) => i !== 1).map((r) => (
+            <li>
+              <blockquote lang={r.lang}>
+                <p>“{r.t}”</p>
+                <footer>{r.n}</footer>
+              </blockquote>
             </li>
           ))}
         </ul>
@@ -258,7 +304,7 @@ const cliente = {
       </div>
     </section>
 
-    <!-- Visita: horario y mapa -->
+    <!-- Visita: fachada, horario y mapa -->
     <section id="visita" class="visit" aria-labelledby="visita-title">
       <div class="wrap visit-in">
         <div class="visit-info">
@@ -279,13 +325,19 @@ const cliente = {
           <div class="addr">
             <p><Icon name="pin" size={20} /><span>{negocio.direccion.calle}<br />{negocio.direccion.cp} {negocio.direccion.ciudad}</span></p>
             <div class="addr-actions">
-              <a class="btn btn-ink" href={negocio.mapsUrl} target="_blank" rel="noopener"><Icon name="route" size={20} />{t.visita.comoLlegar}</a>
-              <a class="btn btn-ink-line" href={tel}><Icon name="phone" size={20} />{negocio.telefono}</a>
+              <a class="btn btn-dark" href={negocio.mapsUrl} target="_blank" rel="noopener"><Icon name="route" size={20} />{t.visita.comoLlegar}</a>
+              <a class="btn btn-dark-line" href={tel}><Icon name="phone" size={20} />{negocio.telefono}</a>
             </div>
           </div>
         </div>
-        <div class="map">
-          <iframe src={negocio.mapsEmbed} title={t.visita.mapaTitulo} loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <div class="visit-media">
+          <figure class="facade">
+            <Pic id="fachada" alt={t.trabajos.alts.fachada} sizes="(max-width: 860px) 92vw, 560px" />
+            <figcaption>{t.visita.buscanos}</figcaption>
+          </figure>
+          <div class="map">
+            <iframe src={negocio.mapsEmbed} title={t.visita.mapaTitulo} loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
         </div>
       </div>
     </section>
@@ -294,9 +346,10 @@ const cliente = {
   <footer class="foot">
     <div class="wrap foot-in">
       <div class="foot-cta">
+        <p class="foot-logo" aria-hidden="true">Sempre Divas</p>
         <p class="foot-big">{t.pie.cta}</p>
         <p>{t.pie.ctaSub}</p>
-        <a class="btn btn-lamp" href="#cita"><Icon name="calendar" size={20} />{t.pedirCita}</a>
+        <a class="btn btn-gold" href="#cita"><Icon name="calendar" size={20} />{t.pedirCita}</a>
       </div>
       <div class="foot-cols">
         <div>
@@ -305,7 +358,11 @@ const cliente = {
         </div>
         <div>
           <p class="foot-h">{t.pie.contacto}</p>
-          <p><a href={tel}>{negocio.telefono}</a><br /><a href={wa} target="_blank" rel="noopener">WhatsApp</a></p>
+          <p>
+            <a href={tel}>{negocio.telefono}</a> · <a href={wa} target="_blank" rel="noopener">WhatsApp</a><br />
+            {t.pie.fijo}: <a href={`tel:${negocio.fijoE164}`}>{negocio.fijo}</a><br />
+            <a href={ig} target="_blank" rel="noopener">@{negocio.instagram}</a>
+          </p>
         </div>
         <div>
           <p class="foot-h">{t.pie.horario}</p>
@@ -313,8 +370,7 @@ const cliente = {
         </div>
       </div>
       <p class="foot-bottom">
-        <span class="brand">Sempre<span>Divas</span></span>
-        <span>{t.pie.hecho}</span>
+        <span>{t.oficio} · {t.pie.hecho}</span>
         <a href="#main">{t.pie.arriba}</a>
       </p>
     </div>

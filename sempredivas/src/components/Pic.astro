@@ -1,0 +1,13 @@
+---
+// Foto real del salón: webp con respaldo jpg, con su tamaño para no mover la página al cargar.
+import { fotos, foto, srcset, type FotoId } from '../data/negocio';
+interface Props { id: FotoId; alt: string; sizes: string; eager?: boolean; class?: string }
+const { id, alt, sizes, eager = false, class: cls } = Astro.props;
+const { w, h } = fotos[id];
+const W = Math.min(w, 900);
+const H = Math.round((h * W) / w);
+---
+<picture>
+  <source type="image/webp" srcset={srcset(id)} sizes={sizes} />
+  <img class={cls} src={foto(id)} alt={alt} width={W} height={H} loading={eager ? 'eager' : 'lazy'} decoding="async" />
+</picture>

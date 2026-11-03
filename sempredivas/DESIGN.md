@@ -1,12 +1,13 @@
 # Design · SempreDivas
 
-Mundo: **cabina de fotomatón**. La clienta entra, corre la cortina y sale con su tira de fotos.
+Mundo: **el propio salón de Av. Bufalà 21**, sacado de sus fotos reales (carpeta `referencias/`). Glam de barrio: negro, blanco y oro, mármol y letra caligráfica. Sustituye al antiguo mundo "fotomatón" (ciruela y terciopelo), que no tenía nada que ver con la tienda.
 
-- Cortina de terciopelo ciruela (`--velvet-deep #2a0619`, `--velvet #3f0b26`, `--velvet-2`, `--velvet-hi #7a1f4b`) en portada y pie, con pliegues dibujados en CSS y la barra metálica arriba.
-- Papel de la tira (`--paper #f3f1ed`, `--paper-2`) para las secciones de lectura; tinta `--ink #1d1319`.
-- Luz del rótulo (`--lamp #ffc83d`) solo para la acción principal (Pedir cita / Enviar) y el foco.
-- Hoja de contactos (`--film #141013`) para Trabajos.
-- Tipos: Bricolage Grotesque (estrecha, 800, para marca y titulares), Hanken Grotesk (texto). Autoalojadas con @fontsource.
-- Momento animado único: al cargar, cuatro flashes; cada foto de la tira se revela con el suyo (sin animación con reduced-motion).
-- Reserva "en cuatro fotos": cada paso completado revela una foto de "tu tira" con un flash pequeño. En móvil la tira queda fija abajo, en fila, con el botón de enviar.
-- Botones en píldora; tarjetas con radio 16px; sombras con desplazamiento y desenfoque.
+- **Rótulo negro carbón** (`--char #2c2b29`, `--char-2`, `--char-3`) con letra blanca (`--on-char #f4f1ec`): portada, cabecera, pared de Trabajos, tarjeta "Tu cita" y pie.
+- **Oro del logo de la pared** (`--gold #c9a463`, `--gold-hi`, `--gold-deep #85652f` para texto sobre claro): botón principal, versalitas, adornos, foco.
+- **Blanco y mármol** (`--white #fdfcfa`, `--marble #f3f1ed`, `--marble-2 #e8e4de`): secciones de lectura. La "carta" de precios va en el gris del vinilo del escaparate.
+- **Papel pintado de plumas negro y oro**: patrón SVG (`--feather`) a baja opacidad en portada, Trabajos y pie.
+- **Espejo ovalado de marco blanco**: la foto principal de la portada y una de la galería; el medallón ovalado del rótulo, en pequeño.
+- **Adorno del vinilo**: filete fino con un rombo (`.orn`).
+- Tipos (autoalojados con @fontsource): **Dancing Script** solo para el logotipo "Sempre Divas"; **Cormorant SC** para las versalitas tipo "PERRUQUERIA & ESTÈTICA" y etiquetas; **Cormorant** para titulares y citas; **Hanken Grotesk** para el texto. Cifras siempre alineadas (Cormorant trae cifras antiguas).
+- Momento animado único: al cargar, el espejo "se enciende" (luz dorada detrás y la foto se aclara); el medallón sube después. Sin animación con reduced-motion.
+- Botones en píldora; tarjetas de formulario con radio 16px y filete fino; sombras con desplazamiento y desenfoque.

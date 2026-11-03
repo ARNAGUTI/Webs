@@ -11,7 +11,6 @@ interface Cliente {
       eligeDia: string; sinHoras: string; vacio: Record<'servicio' | 'dia' | 'hora' | 'datos', string>; resumen: string; resumenVacio: string; msg: string; msgNota: string;
       hola: string; errores: Record<'servicio' | 'dia' | 'hora' | 'nombre' | 'tel', string>;
     };
-    sello: string;
     visita: { abierto: string; cierraA: string; ahoraCerrado: string; abreHoy: string; abreManana: string; abreEl: string; aLas: string };
   };
 }
@@ -107,15 +106,6 @@ export function init() {
   $$<HTMLAnchorElement>('[data-lang]').forEach((a) =>
     a.addEventListener('click', () => { if (location.hash) a.href = a.pathname + location.hash; }),
   );
-
-  // ---------- Fotomatón: un flash por foto al cargar ----------
-  const strip = $('[data-strip]');
-  const stamp = $('[data-stamp]');
-  if (stamp) stamp.textContent = `SempreDivas · ${t.sello} · ${now.date.getUTCDate()} ${t.meses[now.date.getUTCMonth()]} ${now.date.getUTCFullYear()}`;
-  if (strip && !reduced()) {
-    root.classList.add('booth-boot');
-    setTimeout(() => root.classList.remove('booth-boot'), 3400);
-  }
 
   // ---------- Abierto / cerrado (en el letrero y junto al horario) ----------
   function estado(): { open: boolean; label: string; detail: string } {
