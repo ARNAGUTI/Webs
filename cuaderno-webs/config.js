@@ -3,5 +3,5 @@
  * Si lo dejas vacío, la app funciona en modo prueba y guarda solo en el dispositivo. */
 window.CW_CONFIG = {
   supabaseUrl: "https://vgdvtebxnfztrsktkkkk.supabase.co",
-  supabaseAnonKey: "",
+  supabaseAnonKey: "sb_publishable_9abc7hB1xiK6rgz2EfmheQ_l7jrk8ej",
 };
