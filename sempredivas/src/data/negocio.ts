@@ -68,7 +68,7 @@ export const precioTexto = (p: number | null, lang: 'es' | 'ca') =>
 
 // Reseñas reales (esopiniones.com, copiadas tal cual, solo el nombre de pila).
 export const resenas = [
-  { n: 'Yolanda', lang: 'es', t: 'Gracias a las hermanas por su atención, consejos y delicadeza en el tratamiento del cabello. Te explican todo lo que te van haciendo y el resultado es estupendo.' },
+  { n: 'Joana', lang: 'es', t: 'Muy buen trato, ambiente muy cómodo y cortes de pelo muy bien hechos. Hemos ido 4 chicas a lavar, cortar y peinar y estamos contentísimas con el resultado.' },
   { n: 'Isa', lang: 'es', t: 'Te ofrecen café y están pendientes y explicándote en cada momento qué te van a hacer. El masaje capilar mientras te lavan el cabello es de 100.' },
   { n: 'Montserrat', lang: 'es', t: 'Suelo tener problemas con el corte de mi pelo por tenerlo muy grueso y he salido encantada. ¡Mi peluquería de confianza a partir de ahora!' },
   { n: 'Claudia', lang: 'ca', t: 'Un tracte molt amable i professional. Vaig fer-me un tractament de color amb productes naturals i el seu servei va ser immillorable.' },

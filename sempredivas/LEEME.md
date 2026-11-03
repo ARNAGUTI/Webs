@@ -30,7 +30,7 @@ Con su web:
 2. En Trabajos, arrastra la línea dorada del antes/después del color cobrizo, y toca cualquier foto para verla en grande en un espejo ovalado.
 3. Su carta de servicios tal cual está en el escaparate, con los precios que ya enseña.
 4. Pide una cita de prueba (cada paso hecho se marca con un check dorado): la tarjeta negra "Tu cita" se va rellenando y al final se abre WhatsApp.
-5. Sus propias reseñas: las hermanas, el café, el masaje capilar.
+5. Sus propias reseñas: el trato, el café, el masaje capilar.
 
 ## Lo que hay que confirmar con el salón
 

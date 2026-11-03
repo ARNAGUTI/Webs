@@ -9,7 +9,7 @@
 - **Fresha**: ficha automática **no reclamada** (`/lvp/`): "el negocio no está afiliado ni asociado a Fresha". Sin reserva online, solo "Llamar para reservar", foto genérica y un carrusel de "reservar online en establecimientos cercanos" con otros salones. Es decir: **no usa Fresha para reservar**, Fresha le muestra la competencia a quien la busca.
 - **Horario**: L cerrado · M–V 9:00–20:00 · D 9:00–14:00. Sábado: 9:00–20:00 según PeluqueriaMaster y esopiniones, 9:00–17:00 según Fresha (pendiente).
 - **Reseñas**: 4,8★ con 188 reseñas en Google; nº 15 de 229 peluquerías de Badalona (PeluqueriaMaster). Destacan el trato amable y cercano (69 %) y la profesionalidad (47 %); pegas minoritarias: precios algo altos (7 %) y algún daño capilar (7 %).
-- **Quién lo lleva**: dos hermanas (lo repiten varias reseñas). Ofrecen café al llegar y masaje capilar en el lavado.
+- **Quién lo lleva**: sin confirmar (algunas reseñas hablan de "las hermanas"; no se dice en la web hasta saberlo). Ofrecen café al llegar y masaje capilar en el lavado.
 
 ## Cómo es el salón (fotos en `referencias/`)
 

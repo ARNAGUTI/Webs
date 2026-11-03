@@ -23,7 +23,7 @@ Que la clienta vea el salón, sus servicios y su horario, y pida cita (servicio,
 
 ## Positioning
 
-Peluquería y estética de barrio, llevada por dos hermanas, con 4,8★ y 188 reseñas en Google (nº 15 de 229 en Badalona según PeluqueriaMaster). Lo que más valoran: trato cercano, café al llegar, masaje capilar en el lavado. Fuertes según sus fotos: color cobrizo, alisados, trenzas y peinados de fiesta (también a niñas). Abre de martes a domingo, incluido domingo por la mañana.
+Peluquería y estética de barrio (quién la lleva: sin confirmar), con 4,8★ y 188 reseñas en Google (nº 15 de 229 en Badalona según PeluqueriaMaster). Lo que más valoran: trato cercano, café al llegar, masaje capilar en el lavado. Fuertes según sus fotos: color cobrizo, alisados, trenzas y peinados de fiesta (también a niñas). Abre de martes a domingo, incluido domingo por la mañana.
 
 ## Operating Context
 
