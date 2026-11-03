@@ -26,10 +26,11 @@ Con su web:
 
 ## Enséñasela
 
-1. En el móvil: su logo en grande, como el rótulo, y su trabajo de trenzas con perlas en un espejo ovalado como los del salón.
-2. Su carta de servicios tal cual está en el escaparate, con los precios que ya enseña.
-3. Pide una cita de prueba: la tarjeta negra "Tu cita" se va rellenando y al final se abre WhatsApp.
-4. Sus propias reseñas: las hermanas, el café, el masaje capilar.
+1. Al abrirla, su logo se escribe solo y el espejo ovalado se enciende con su trabajo de trenzas con perlas. En el ordenador, mueve el ratón: el espejo se inclina y las plumas del papel pintado brillan en oro.
+2. En Trabajos, arrastra la línea dorada del antes/después del color cobrizo, y toca cualquier foto para verla en grande en un espejo ovalado.
+3. Su carta de servicios tal cual está en el escaparate, con los precios que ya enseña.
+4. Pide una cita de prueba (cada paso hecho se marca con un check dorado): la tarjeta negra "Tu cita" se va rellenando y al final se abre WhatsApp.
+5. Sus propias reseñas: las hermanas, el café, el masaje capilar.
 
 ## Lo que hay que confirmar con el salón
 

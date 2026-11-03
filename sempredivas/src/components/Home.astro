@@ -2,7 +2,7 @@
 import Icon from './Icon.astro';
 import Pic from './Pic.astro';
 import { ui, type Lang } from '../i18n/ui';
-import { negocio, horario, servicios, grupos, resenas, precioTexto, type FotoId } from '../data/negocio';
+import { negocio, horario, servicios, grupos, resenas, precioTexto, foto, type FotoId } from '../data/negocio';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -17,7 +17,7 @@ const fill = (tpl: string, vars: Record<string, string | number>) => tpl.replace
 const precio = (p: number | null) => precioTexto(p, lang);
 
 // Galería: trabajos reales del salón.
-const galeria: FotoId[] = ['antes-despues', 'lazo', 'alisado', 'semirecogido', 'trenzas-nina', 'espejo-ondas'];
+const galeria: FotoId[] = ['lazo', 'alisado', 'espejo-ondas', 'semirecogido', 'trenzas-nina', 'trenzas-perlas'];
 const pasos = ['servicio', 'dia', 'hora', 'datos'] as const;
 
 const ordenDias = [1, 2, 3, 4, 5, 6, 0];
@@ -86,9 +86,10 @@ const cliente = {
           </ul>
         </div>
 
-        <figure class="mirror">
+        <figure class="mirror" data-tilt>
           <div class="mirror-glass">
             <Pic id="trenzas-perlas" alt={t.hero.espejo} sizes="(max-width: 760px) 70vw, 400px" eager />
+            <span class="sheen" aria-hidden="true"></span>
           </div>
           <div class="medallion" aria-hidden="true">
             <Pic id="lazo" alt="" sizes="160px" eager />
@@ -97,13 +98,22 @@ const cliente = {
       </div>
     </section>
 
+    <!-- Cinta del escaparate: la lista de servicios corriendo -->
+    <div class="ticker" aria-hidden="true">
+      <div class="ticker-track">
+        {[0, 1].map(() => (
+          <p>{servicios.map((s) => <><span>{t.servicios.nombres[s.id]}</span><i class="tk-dot"></i></>)}</p>
+        ))}
+      </div>
+    </div>
+
     <!-- La casa: las dos hermanas -->
     <section class="casa" aria-labelledby="casa-title">
       <div class="wrap casa-in">
-        <figure class="casa-foto">
+        <figure class="casa-foto" data-reveal>
           <Pic id="logo-marmol" alt={t.casa.foto} sizes="(max-width: 760px) 90vw, 380px" />
         </figure>
-        <div class="casa-copy">
+        <div class="casa-copy" data-reveal style="--d:120ms">
           <h2 id="casa-title">{t.casa.titulo}</h2>
           <p class="casa-text">{t.casa.texto}</p>
           <ul class="gestos">
@@ -217,14 +227,14 @@ const cliente = {
     <!-- Precios: la carta del escaparate -->
     <section id="servicios" class="prices" aria-labelledby="precios-title">
       <div class="wrap">
-        <div class="sec-head sec-head-center">
+        <div class="sec-head sec-head-center" data-reveal>
           <h2 id="precios-title">{t.servicios.titulo}</h2>
           <p class="orn-line" aria-hidden="true"><span class="orn"></span><span class="orn"></span></p>
           <p>{t.servicios.intro}</p>
         </div>
         <div class="price-cols">
-          {grupos.map((g) => (
-            <div class="price-group">
+          {grupos.map((g, i) => (
+            <div class="price-group" data-reveal style={`--d:${i * 90}ms`}>
               <h3>{t.servicios.grupos[g]}</h3>
               <ul>
                 {servicios.filter((s) => s.grupo === g).map((s) => (
@@ -248,18 +258,39 @@ const cliente = {
     <!-- Trabajos: la pared de papel pintado negro y oro -->
     <section id="trabajos" class="works" aria-labelledby="trabajos-title">
       <div class="wrap">
-        <div class="sec-head works-head">
+        <div class="sec-head works-head" data-reveal>
           <h2 id="trabajos-title">{t.trabajos.titulo}</h2>
           <p>{t.trabajos.intro}</p>
           <a class="btn btn-line btn-sm" href={ig} target="_blank" rel="noopener"><Icon name="instagram" size={18} />{t.trabajos.instagram}</a>
         </div>
         <ul class="gallery">
+          <li class="g-item g-ba" data-reveal-mask>
+            <div class="ba" data-ba style="--x:50%">
+              <img class="ba-after" src={foto('antes-despues')} alt={t.trabajos.alts['antes-despues']} width="900" height="900" loading="lazy" decoding="async" />
+              <img class="ba-before" src={foto('antes-despues')} alt="" width="900" height="900" loading="lazy" decoding="async" />
+              <span class="ba-tag ba-tag-l" aria-hidden="true">{t.trabajos.antes}</span>
+              <span class="ba-tag ba-tag-r" aria-hidden="true">{t.trabajos.despues}</span>
+              <span class="ba-handle" aria-hidden="true"><Icon name="arrow" size={16} /><Icon name="arrow" size={16} /></span>
+              <input class="ba-range" type="range" min="0" max="100" value="50" aria-label={t.trabajos.comparar} data-ba-range />
+            </div>
+          </li>
           {galeria.map((id, i) => (
-            <li class={`g-item g-${i}`}>
-              <Pic id={id} alt={t.trabajos.alts[id]} sizes="(max-width: 760px) 50vw, 25vw" />
+            <li class={`g-item g-${i}`} data-reveal-mask style={`--d:${(i + 1) * 70}ms`}>
+              <button type="button" class="g-open" data-lb-open={i} aria-label={`${t.trabajos.ampliar}: ${t.trabajos.alts[id]}`}>
+                <Pic id={id} alt={t.trabajos.alts[id]} sizes="(max-width: 760px) 50vw, 25vw" />
+              </button>
             </li>
           ))}
         </ul>
+        <dialog class="lb" data-lb aria-label={t.trabajos.titulo} data-fotos={JSON.stringify(galeria.map((id) => ({ src: foto(id), alt: t.trabajos.alts[id] })))}>
+          <figure class="lb-fig">
+            <img data-lb-img src={foto(galeria[0])} alt="" loading="lazy" />
+            <figcaption data-lb-cap></figcaption>
+          </figure>
+          <button type="button" class="lb-btn lb-close" data-lb-close aria-label={t.trabajos.cerrar}><span aria-hidden="true" class="x"></span></button>
+          <button type="button" class="lb-btn lb-prev" data-lb-prev aria-label={t.trabajos.anterior}><Icon name="arrow" size={22} /></button>
+          <button type="button" class="lb-btn lb-next" data-lb-next aria-label={t.trabajos.siguiente}><Icon name="arrow" size={22} /></button>
+        </dialog>
       </div>
     </section>
 
@@ -269,7 +300,7 @@ const cliente = {
         <div class="reviews-head">
           <h2 id="resenas-title">{t.resenas.titulo}</h2>
           <a class="rev-score" href={negocio.mapsUrl} target="_blank" rel="noopener">
-            <span class="rev-num">{v.nota}</span>
+            <span class="rev-num" data-count={v.nota}>{v.nota}</span>
             <span class="rev-meta">
               <span class="stars" aria-hidden="true">{[0, 1, 2, 3, 4].map(() => <Icon name="star" size={16} />)}</span>
               <span>{fill(t.resenas.media, { x: v.nota, n: v.resenas })}</span>
@@ -278,8 +309,8 @@ const cliente = {
           </a>
         </div>
         <ul class="quotes">
-          {resenas.filter((_, i) => i !== 1).map((r) => (
-            <li>
+          {resenas.filter((_, i) => i !== 1).map((r, i) => (
+            <li data-reveal style={`--d:${i * 80}ms`}>
               <blockquote lang={r.lang}>
                 <p>“{r.t}”</p>
                 <footer>{r.n}</footer>
@@ -331,7 +362,7 @@ const cliente = {
           </div>
         </div>
         <div class="visit-media">
-          <figure class="facade">
+          <figure class="facade" data-reveal>
             <Pic id="fachada" alt={t.trabajos.alts.fachada} sizes="(max-width: 860px) 92vw, 560px" />
             <figcaption>{t.visita.buscanos}</figcaption>
           </figure>
@@ -385,5 +416,7 @@ const cliente = {
 
 <script>
   import { init } from '../scripts/app';
+  import { efectos } from '../scripts/efectos';
   init();
+  efectos();
 </script>
