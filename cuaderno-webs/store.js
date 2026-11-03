@@ -138,7 +138,11 @@
 
   /* Pantalla de acceso */
   function pantallaLogin(msg) {
-    return new Promise(resolve => {
+    CW.pendingLogin = true;
+    const nav = document.querySelector("nav.tabs"); if (nav) nav.hidden = true;
+    const done = session => { CW.pendingLogin = false; if (nav) nav.hidden = false; return session; };
+    return new Promise(resolve0 => {
+      const resolve = x => resolve0(done(x));
       const v = document.getElementById("view");
       document.getElementById("fab").hidden = true;
       v.innerHTML = `<section class="sec" style="max-width:420px;margin:24px auto;width:100%">

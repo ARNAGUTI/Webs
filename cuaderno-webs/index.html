@@ -374,6 +374,7 @@ function itemsDelRango(desde,hasta){
 function setTab(t){S.tab=t;document.querySelectorAll("nav.tabs button").forEach(b=>b.setAttribute("aria-current",b.dataset.tab===t?"page":"false"));
   try{localStorage.setItem("cw_tab",t)}catch(e){} render();window.scrollTo(0,0)}
 function render(){
+  if(window.CW&&CW.pendingLogin)return;
   const v=$("#view"); if(!S.loaded.cfg&&db){/* aún cargando */}
   const fab=$("#fab"); fab.hidden=!["inicio","clientes","movs","cal"].includes(S.tab);
   fab.textContent={inicio:"+ Apuntar",clientes:"+ Cliente",movs:"+ Apuntar",cal:"+ Evento"}[S.tab]||"+";
